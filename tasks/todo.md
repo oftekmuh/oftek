@@ -251,4 +251,12 @@
 - [x] Kod İtme (Push): Ana dalın (`main`) `https://github.com/oftekmuh/oftek` adresine başarıyla itilmesi
 - [x] CI/CD Doğrulaması: GitHub Actions üzerinde Ubuntu/Windows ve Python 3.11/3.12 matrisinde tüm testlerin eksiksiz yeşil geçmesi
 
+## Faz 27: Yerel Ağ ve Çoklu Cihaz (Wi-Fi / LAN) Giriş Özelliği ve Dokümantasyonu
+- [x] Python Web Sunucusu Mimarisi: `server.py` `0.0.0.0:8080` üzerinde tüm yerel ağ arayüzlerini dinler; terminalde yerel IP (`http://192.168.1.X:8080`) yayınlanır
+- [x] Dokümantasyon (`README.md`): Çoklu cihaz erişim özelliği ve "📱 Aynı Ağdaki Diğer Cihazlardan (Telefon / Tablet) Nasıl Girilir?" rehberi eklendi
+- [x] Dokümantasyon (`kullanim_kilavuzu.html`): Sol menüye ve ana gövdeye "📱 Aynı Ağdaki Diğer Cihazlardan Erişim" görsel adımlı rehberi eklendi
+- [x] Standartlar & Dersler (`tasks/lessons.md`): Yerel Ağ ve Çoklu Cihaz Girişi kuralı kaydedildi
+- [x] Git & Depo Senkronizasyonu: Değişiklikler anonim kimlikle GitHub (`oftekmuh/oftek`) deposuna push edildi
+
+
 

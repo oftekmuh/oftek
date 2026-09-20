@@ -482,6 +482,7 @@
             <h3>İçindekiler</h3>
             <ul>
                 <li><a href="#giris">1. Giriş & Hızlı Başlangıç</a></li>
+                <li><a href="#mobil-ag">📱 Aynı Ağdan (Telefon/Tablet) Erişim</a></li>
                 <li><a href="#gunluk-kasa">2. Günlük Kasa & Gün Oturumu</a></li>
                 <li><a href="#cari-borclar">3. Cari Borç Takibi (Firma)</a></li>
                 <li><a href="#alacak-tahsilat">4. Alacak & Tahsilat (FIFO)</a></li>
@@ -566,6 +567,46 @@
                     <div style="font-size: 0.825rem; color: #1e40af; margin-top: 8px;">
                         <em>İpucu: Aynı Wi-Fi ağına bağlı telefon veya tabletinizden bağlanmak için, konsol penceresinde yazan yerel IP adresini (Örn: <code>http://192.168.1.X:8080</code>) kullanabilirsiniz.</em>
                     </div>
+                </div>
+            </section>
+
+            <!-- AYNI AĞDAKİ CİHAZLARDAN (TELEFON / TABLET) ERİŞİM -->
+            <section id="mobil-ag" class="card">
+                <h2>📱 Aynı Ağdaki Diğer Cihazlardan (Telefon, Tablet, Laptop) Erişim</h2>
+                <p>
+                    <strong>oftek</strong>, Python'ın dahili web sunucusu motoruyla (<code>0.0.0.0:8080</code>) tüm yerel ağ arayüzlerini dinler. Bu sayede programı tek bir ana bilgisayarda başlattığınızda sistem aynı zamanda <strong>yerel bir ofis sunucusu</strong> haline gelir.
+                </p>
+
+                <div class="callout callout-success">
+                    <strong>Sıfır Ek Kurulum:</strong> Telefonunuza, tabletinize veya diğer ofis bilgisayarlarına hiçbir uygulama, sürücü veya harici paket yüklemeniz gerekmez. Yalnızca standart bir web tarayıcısı (Safari, Chrome, Edge vb.) yeterlidir.
+                </div>
+
+                <h3>3 Adımda Telefon veya Tabletten Bağlanma</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-title">Aynı Ağa Bağlanın</div>
+                        <div class="step-desc">Telefonunuzu veya tabletinizi, oftek'in çalıştığı ana bilgisayarla <strong>aynı Wi-Fi veya ofis ağına</strong> bağlayın.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-title">Yerel IP Adresini Görün</div>
+                        <div class="step-desc">Ana bilgisayardaki siyah konsol penceresinde yazan adresi not edin:<br><code style="font-size:0.8rem; color:var(--primary); font-weight:bold;">* Mobilden Giriş: http://192.168.1.X:8080</code></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Tarayıcıdan Girin</div>
+                        <div class="step-desc">Telefonunuzun tarayıcısına bu adresi yazıp açın. Tam uyumlu dokunmatik arayüz anında açılacaktır.</div>
+                    </div>
+                </div>
+
+                <div class="callout callout-info" style="margin-top: 1.25rem;">
+                    <div style="font-weight: 700; margin-bottom: 0.35rem;">💡 Neden Çok Kullanışlıdır?</div>
+                    <ul style="margin-bottom: 0; margin-left: 1.25rem;">
+                        <li><strong>Dükkanda / Kasada Hareket Serbestliği:</strong> Masaya bağlı kalmadan reyon veya tezgahtayken telefonunuzdan hızlı tahsilat veya ödeme kaydı girebilirsiniz.</li>
+                        <li><strong>Depoda Sayım ve Giriş:</strong> Depo veya sevkiyattayken gelen firma faturalarını tabletinizden anında sisteme işleyebilirsiniz.</li>
+                        <li><strong>Ofis İçi Ortak Çalışma:</strong> Birden fazla çalışan aynı anda kendi bilgisayar veya telefonundan ana kasayı ve carileri canlı takip edebilir.</li>
+                    </ul>
                 </div>
             </section>
 

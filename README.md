@@ -66,6 +66,7 @@ oftek, mimari olarak tamamen kurum bağımsızdır. **Sistem & Ayarlar** ekranı
   - <kbd>Ctrl + D</kbd> / <kbd>Ctrl + '</kbd>: Üst satırı kopyalar.
   - <kbd>F2</kbd>: Yeni satır ekler.
   - <kbd>Ctrl + S</kbd>: Fişi kaydeder.
+- 📱 **Aynı Yerel Ağdaki Diğer Cihazlardan (Telefon, Tablet, PC) Erişim:** Python'ın dahili web sunucusu `0.0.0.0:8080` üzerinde tüm yerel ağ arayüzlerini dinler. Programı tek bir bilgisayarda başlattığınızda, aynı Wi-Fi veya ofis ağına bağlı cep telefonu, tablet veya diğer bilgisayarlardan yerel IP adresiyle (Örn: `http://192.168.1.45:8080`) hiçbir kurulum yapmadan anında bağlanabilir, kasayı ve tahsilatları mobil cihazınızdan özgürce yönetebilirsiniz.
 - 🔄 **Çift Modlu Tahsilat Dağıtımı:** Müşteri ödemelerini ister tek tıkla otomatik **FIFO** ile dağıtın, ister açık faturaları görerek **Seçimli** tutar tahsis edin.
 - 👥 **Personel Yönetimi & Dinamik Ek Bilgiler:** Sınırsız dinamik ek bilgi alanı (Metin, Sayı, Tarih), personel türleri, borç çeşitleri yönetimi, dönemlik maaş tahakkukları ve parçalı avans yönetimi.
 - 📑 **Genel Hesap Planı & Mizan:** Excel şablonundan tek tıkla toplu hesap aktarımı ve geçici mizan raporu.
@@ -89,6 +90,13 @@ python app.py
 ```
 Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
 
+### 📱 Aynı Ağdaki Diğer Cihazlardan (Telefon / Tablet) Nasıl Girilir?
+1. Programı ana bilgisayarda başlattığınızda açılan siyah konsol ekranında yerel IP adresiniz otomatik listelenir:  
+   `* Mobilden Giriş (Aynı WiFi): http://192.168.1.X:8080`
+2. Telefonunuzu veya tabletinizi ana bilgisayarla **aynı Wi-Fi veya ofis ağına** bağlayın.
+3. Mobil cihazınızın tarayıcısına (Safari, Chrome vb.) konsolda yazan IP adresini (Örn: `http://192.168.1.45:8080`) yazıp Enter'a basın.
+4. oftek'in dokunmatik ve tam uyumlu mobil arayüzü karşınıza gelecektir; sahada veya dükkanda kasayı telefonunuzdan yönetebilirsiniz.
+
 ---
 
 ## 🌐 Web & Kılavuz Bağlantıları
@@ -101,7 +109,7 @@ Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
 
 ## 🧪 Birim ve Entegrasyon Testleri
 
-oftek, 22 adet kapsamlı otomatik test ile korunmaktadır. Testleri çalıştırmak için:
+oftek, 30 adet kapsamlı otomatik test ile korunmaktadır. Testleri çalıştırmak için:
 
 ```bash
 # Dahili Python ile (Windows):

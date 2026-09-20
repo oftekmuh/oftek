@@ -63,3 +63,6 @@
   Uygulama genelinde iki farklı logo türü amaca göre kullanılmalıdır:
   1. **Sade Logo (`logo-sade.png` / Amblem):** Yanında zaten kurum/sistem başlığı metin olarak yer alan kompakt alanlarda (Header sol amblem, Favicon, Ayarlar profil kutusu, Kılavuz üst barı) kullanılmalıdır. Böylece metin + amblem çakışması veya kalabalık görünüm engellenir, yükseklik `h-9` / `h-10` (`max-w-[42px]`) ile orantılanmalıdır.
   2. **İsimli Logo (`logo-isim.png` / Amblem + OFTEK):** Geniş ve bağımsız vitrin alanlarında (Dashboard karşılama banner'ı, Ayarlar Sistem Bilgisi kartı, Kılavuz Giriş bölümü, Open Graph ve Twitter Cards) kullanılmalıdır. Yükseklik `h-14` / `h-16` aralığında tutularak marka kimliği güçlü ve net biçimde öne çıkarılmalıdır.
+- **Yerel Ağ ve Çoklu Cihaz (Wi-Fi / LAN) Girişi Standardı**:
+  Python web sunucusu (`server.py`) `0.0.0.0:8080` üzerinde tüm ağ arayüzlerini dinler. Program tek bir ana bilgisayarda çalıştırıldığında konsolda yerel IP adresi (`http://192.168.1.X:8080`) yazdırılır. Aynı Wi-Fi veya kablolu ofis ağına bağlı olan tüm cep telefonları, tabletler ve diğer bilgisayarlar hiçbir ek program/sürücü yüklemeden tarayıcı üzerinden sisteme erişebilir. Arayüz tam dokunmatik ve mobil uyumlu (responsive) olduğu için saha, kasa ve depo operasyonları cep telefonundan eş zamanlı yönetilebilir.
+
