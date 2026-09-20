@@ -2,8 +2,8 @@
  * oftek - Personel Tahakkuk Fişi & Borç Çeşitleri Yönetimi
  */
 
-let currentEmpAccYear = '2026';
-let currentEmpAccMonth = '3';
+let currentEmpAccYear = new Date().getFullYear().toString();
+let currentEmpAccMonth = (new Date().getMonth() + 1).toString();
 let cachedDebtTypes = [];
 
 function setEmpAccYear(yr) {
@@ -433,7 +433,7 @@ function filterAccrualReportType(tur) {
 
 async function loadAccrualReport() {
     try {
-        const yr = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : '2026';
+        const yr = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : new Date().getFullYear().toString();
         const mo = typeof currentPeriodMonth !== 'undefined' ? currentPeriodMonth : '';
         let url = `/api/employees/accrual-report?yil=${yr}`;
         if (mo) url += `&ay=${mo}`;

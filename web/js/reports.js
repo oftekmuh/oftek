@@ -6,7 +6,7 @@
  */
 
 let activeReportTab = 'cash_flow';
-let reportYear = '2026';
+let reportYear = new Date().getFullYear().toString();
 let reportStartDate = '';
 let reportEndDate = '';
 let reportCashAccount = '';

@@ -203,7 +203,7 @@ function setRowFieldType(btn, type) {
 
 async function loadEmployees() {
     try {
-        const yil = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : '2026';
+        const yil = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : new Date().getFullYear().toString();
         const ay = typeof currentPeriodMonth !== 'undefined' ? currentPeriodMonth : '';
         let url = `/api/employees?yil=${yil}`;
         if (ay) url += `&ay=${ay}`;

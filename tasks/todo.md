@@ -281,6 +281,15 @@
 - [x] Testler & Doğrulama: `tests/test_auth.py` ile PBKDF2, yetkilendirme ve API zırh testlerinin yazılması, 35/35 testin eksiksiz yeşil geçmesi
 - [x] Dokümantasyon & Git: `README.md`, `kullanim_kilavuzu.html`, `tasks/lessons.md` güncellemeleri ve GitHub push
 
+## Faz 31: Hardcoded Verilerin ve Sabit Yıl Tanımlarının Arındırılması (Dinamik Yapı)
+- [x] `db_seed.py`: Şirket/örnek isimli tüm alt hesapların ('Ziraat Bankası', 'Merkez TL Kasası' vb.) tohum verilerden kaldırılması, yalnızca temel ana hesapların (seviye 1) bırakılması
+- [x] Frontend Yıl Değişkenleri (`web/js/*.js`): `2026` sabitlerinin `new Date().getFullYear().toString()` ile dinamik hale getirilmesi
+- [x] Dinamik Yıl Butonları & UI (`web/index.html`, `web/js/app.js`): Header, Raporlar ve Personel Tahakkuk yıl butonlarının mevcut yıl ve önceki yıla göre dinamik çizilmesi
+- [x] Input Placeholder Temizliği: Sabit `2026` içeren örnek evrak ve açıklama metinlerinin genel şablonlara dönüştürülmesi
+- [x] Testlerin Doğrulanması: 35/35 birim ve entegrasyon testinin yeşil geçmesi
+- [x] Git & GitHub: Değişikliklerin anonim yazarla commit ve push edilmesi
+
+
 
 
 

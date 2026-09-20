@@ -4,7 +4,7 @@
 
 // Global Uygulama Durumu
 let activeTab = 'dashboard';
-let currentPeriodYear = '2026';
+let currentPeriodYear = new Date().getFullYear().toString();
 let currentPeriodMonth = ''; // Varsayılan tüm aylar açık
 
 // Sayı / Para Formatlayıcı (12.345,67 ₺)

@@ -83,6 +83,10 @@
   Tüm veritabanı sorguları SQLite parametreli (`?`) bağlama yöntemiyle çalıştırılmalı; dinamik string birleştirmeyle SQL oluşturulması kesinlikle yasaklanmalıdır.
 - **JavaScript Global Scope ve Mükerrer `let`/`const` Bildirimi Yasağı**:
   Modüler JS mimarisinde farklı script dosyalarında aynı isimli global değişken `let` veya `const` ile tekrar tanımlanmamalıdır. Mükerrer bildirim `SyntaxError: Identifier '...' has already been declared` hatası üreterek o dosyanın (`app.js`) çalışmasını derhal durdurur; `switchTab`, `setPeriodYear` gibi temel fonksiyonlar tanımsız kalır ve sayfa "Kontrol ediliyor..." durumunda asılı kalır. Ortak global değişkenler (`activeTab`, `currentPeriodYear` vb.) sadece tek bir temel dosyada (`api.js`) tanımlanmalı, diğer dosyalarda doğrudan kullanılmalıdır.
+- **Hardcoded Tohum Veriler ve Dinamik Mali Yıl Standardı**:
+  1. **Tohum Veriler (`db_seed.py`):** Sistemde hiçbir şirkete, bankaya veya kuruluşa özel ('Ziraat Bankası', 'Merkez TL Kasası', 'Yurtiçi Tedarikçiler' vb.) alt hesap kodları tohum verilerde tutulmamalıdır. Yalnızca Seviye 1 genel ana hesaplar (`100`, `102`, `120`, `320`, `770` vb.) başlangıç standardı olarak sunulmalı; tüm alt hesaplar kullanıcı veya kurum tarafından arayüzden veya Excel'den dinamik olarak tanımlanmalıdır.
+  2. **Dinamik Mali Yıl & Tarih Yönetimi:** Frontend veya backend kodlarında `2026` gibi sabit mali yıllar hardcoded olarak yazılmamalıdır. Sistem o anki yılı `new Date().getFullYear()` ve `(currentYear - 1)` üzerinden dinamik olarak hesaplamalı, Header, Personel Tahakkuk ve Raporlar ekranındaki yıl butonları bu dinamik yıla göre çizilmeli ve seçilmelidir. Modal placeholder'ları (`ALM-001`, `SAT-001`) genel şablonlarda tutulmalıdır.
+
 
 
 

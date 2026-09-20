@@ -8,7 +8,7 @@ let currentCustomerOpenReceivables = [];
 
 async function loadReceivables() {
     try {
-        const yil = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : '2026';
+        const yil = typeof currentPeriodYear !== 'undefined' ? currentPeriodYear : new Date().getFullYear().toString();
         const ay = typeof currentPeriodMonth !== 'undefined' ? currentPeriodMonth : '';
         let url = `/api/receivables?yil=${yil}`;
         if (ay) url += `&ay=${ay}`;

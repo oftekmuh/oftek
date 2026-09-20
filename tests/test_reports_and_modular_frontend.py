@@ -28,9 +28,11 @@ class TestReportsAndModularFrontend(unittest.TestCase):
         self.assertNotIn("id=\"btn-month-display\"", header_part)
         self.assertNotIn("id=\"month-picker-popover\"", header_part)
 
-        # 4. Header'da mali yıl butonları VAR
-        self.assertIn("id=\"btn-year-2026\"", header_part)
-        self.assertIn("id=\"btn-year-2025\"", header_part)
+        # 4. Header'da dinamik mali yıl seçici kapsayıcısı VAR
+        self.assertIn("id=\"header-period-years\"", header_part)
+        app_js_path = os.path.join(os.path.dirname(__file__), "..", "web", "js", "app.js")
+        with open(app_js_path, "r", encoding="utf-8") as f:
+            self.assertIn("initDynamicYearSelectors", f.read())
 
         # 5. Raporlar sekmesi VAR
         self.assertIn("id=\"tab-raporlar\"", content)

@@ -176,8 +176,44 @@ function setQuickIncSource(val, btn) {
     }
 }
 
+// ================= DİNAMİK YIL SEÇİCİLERİ BAŞLATICI =================
+function initDynamicYearSelectors() {
+    const currYear = new Date().getFullYear().toString();
+    const prevYear = (new Date().getFullYear() - 1).toString();
+
+    // 1. Header Mali Yıl Butonları
+    const headerContainer = document.getElementById('header-period-years');
+    if (headerContainer) {
+        headerContainer.innerHTML = `
+            <button type="button" id="btn-year-${currYear}" onclick="setPeriodYear('${currYear}')" class="period-year-btn px-2.5 py-0.5 rounded-md font-bold text-xs bg-white text-slate-800 shadow-xs">${currYear}</button>
+            <button type="button" id="btn-year-${prevYear}" onclick="setPeriodYear('${prevYear}')" class="period-year-btn px-2.5 py-0.5 rounded-md font-bold text-xs text-slate-600 hover:text-slate-900">${prevYear}</button>
+        `;
+    }
+
+    // 2. Personel Tahakkuk Ekranı Yıl Butonları
+    const empContainer = document.getElementById('emp-year-buttons-container');
+    if (empContainer) {
+        empContainer.innerHTML = `
+            <button type="button" id="btn-emp-year-${currYear}" onclick="setEmpAccYear('${currYear}')" class="emp-year-btn flex-1 py-1 rounded-lg font-bold bg-white text-slate-800 shadow-xs text-center">${currYear}</button>
+            <button type="button" id="btn-emp-year-${prevYear}" onclick="setEmpAccYear('${prevYear}')" class="emp-year-btn flex-1 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900 text-center">${prevYear}</button>
+        `;
+    }
+
+    // 3. Raporlar Sekmesi Yıl Butonları
+    const repContainer = document.getElementById('report-year-buttons-container');
+    if (repContainer) {
+        repContainer.innerHTML = `
+            <button type="button" id="btn-rep-year-${currYear}" onclick="setReportYear('${currYear}', this)" class="rep-yr-btn px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-800 shadow-xs">${currYear}</button>
+            <button type="button" id="btn-rep-year-${prevYear}" onclick="setReportYear('${prevYear}', this)" class="rep-yr-btn px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900">${prevYear}</button>
+        `;
+    }
+}
+
 // ================= DOM HAZIR VE BAŞLANGIÇ =================
 window.addEventListener('DOMContentLoaded', async () => {
+    // 0. Dinamik Yıl Butonlarını Çiz (Hardcoded yıl bağımlılığını önler)
+    initDynamicYearSelectors();
+
     // 1. Güvenlik Zırhı: Kimlik doğrulama ve ilk kurulum kontrolü
     if (window.authModule && typeof window.authModule.checkStatus === 'function') {
         const isAuthed = await window.authModule.checkStatus();

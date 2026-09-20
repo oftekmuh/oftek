@@ -3,32 +3,29 @@ Veritabanı Başlangıç Tohum Verileri (db_seed.py)
 Standart Genel Hesap Planı, varsayılan personel türleri ve borç çeşitlerini içerir.
 """
 
-# Standart Genel Hesap Planı
+# Standart Genel Hesap Planı (Yalnızca Temel Ana Hesaplar - Seviye 1)
 DEFAULT_ACCOUNTS = [
-    ('100', 'KASA', 'AKTIF', 1), ('100.01', 'Merkez TL Kasası', 'AKTIF', 2),
-    ('102', 'BANKALAR', 'AKTIF', 1), ('102.01', 'Ziraat Bankası Vadesiz TL', 'AKTIF', 2),
+    ('100', 'KASA', 'AKTIF', 1),
+    ('102', 'BANKALAR', 'AKTIF', 1),
     ('103', 'VERİLEN ÇEKLER VE ÖDEME EMİRLERİ (-)', 'PASIF', 1),
-    ('120', 'ALICILAR', 'AKTIF', 1), ('120.01', 'Yurtiçi Müşteriler', 'AKTIF', 2),
-    ('153', 'TİCARİ MALLAR', 'AKTIF', 1), ('153.01', 'Ticari Emtia Malları', 'AKTIF', 2),
-    ('191', 'İNDİRİLECEK KDV', 'AKTIF', 1), ('191.20', '%20 İndirilecek KDV', 'AKTIF', 2),
-    ('255', 'DEMİRBAŞLAR', 'AKTIF', 1), ('257', 'BİRİKMİŞ AMORTİSMANLAR (-)', 'PASIF', 1),
+    ('120', 'ALICILAR', 'AKTIF', 1),
+    ('153', 'TİCARİ MALLAR', 'AKTIF', 1),
+    ('191', 'İNDİRİLECEK KDV', 'AKTIF', 1),
+    ('255', 'DEMİRBAŞLAR', 'AKTIF', 1),
+    ('257', 'BİRİKMİŞ AMORTİSMANLAR (-)', 'PASIF', 1),
     ('300', 'BANKA KREDİLERİ', 'PASIF', 1),
-    ('320', 'SATICILAR', 'PASIF', 1), ('320.01', 'Yurtiçi Tedarikçiler', 'PASIF', 2),
-    ('335', 'PERSONELE BORÇLAR', 'PASIF', 1), ('335.01', 'Personele Net Maaş Borçları', 'PASIF', 2),
+    ('320', 'SATICILAR', 'PASIF', 1),
+    ('335', 'PERSONELE BORÇLAR', 'PASIF', 1),
     ('360', 'ÖDENECEK VERGİ VE FONLAR', 'PASIF', 1),
-    ('391', 'HESAPLANAN KDV', 'PASIF', 1), ('391.20', '%20 Hesaplanan KDV', 'PASIF', 2),
-    ('500', 'SERMAYE', 'PASIF', 1), ('590', 'DÖNEM NET KÂRI', 'PASIF', 1),
-    ('600', 'YURTİÇİ SATIŞLAR', 'PASIF', 1), ('600.01', 'Muhtelif Satış ve Hizmet Gelirleri', 'PASIF', 2),
-    ('600.20', '%20 Yurtiçi Satış Gelirleri', 'PASIF', 2),
+    ('391', 'HESAPLANAN KDV', 'PASIF', 1),
+    ('500', 'SERMAYE', 'PASIF', 1),
+    ('590', 'DÖNEM NET KÂRI', 'PASIF', 1),
+    ('600', 'YURTİÇİ SATIŞLAR', 'PASIF', 1),
     ('621', 'SATILAN TİCARİ MALLAR MALİYETİ (-)', 'AKTIF', 1),
-    ('642', 'FAİZ GELİRLERİ', 'PASIF', 1), ('642.01', 'Mevduat Faiz Gelirleri', 'PASIF', 2),
-    ('649', 'DİĞER OLAĞAN GELİR VE KÂRLAR', 'PASIF', 1), ('649.01', 'Muhtelif Diğer Olağan Gelirler', 'PASIF', 2),
-    ('679', 'DİĞER OLAĞANDIŞI GELİR VE KÂRLAR', 'PASIF', 1), ('679.01', 'Muhtelif Olağandışı Gelirler', 'PASIF', 2),
-    ('770', 'GENEL YÖNETİM GİDERLERİ', 'AKTIF', 1), ('770.01', 'Personel Ücret ve Giderleri', 'AKTIF', 2),
-    ('770.02', 'Ofis, Kırtasiye ve İletişim Giderleri', 'AKTIF', 2),
-    ('770.03', 'Yol, Yemek ve Ulaşım Giderleri', 'AKTIF', 2),
-    ('770.04', 'Kira, Aidat ve Tesis Giderleri', 'AKTIF', 2),
-    ('770.05', 'Elektrik, Su ve Doğalgaz Giderleri', 'AKTIF', 2)
+    ('642', 'FAİZ GELİRLERİ', 'PASIF', 1),
+    ('649', 'DİĞER OLAĞAN GELİR VE KÂRLAR', 'PASIF', 1),
+    ('679', 'DİĞER OLAĞANDIŞI GELİR VE KÂRLAR', 'PASIF', 1),
+    ('770', 'GENEL YÖNETİM GİDERLERİ', 'AKTIF', 1)
 ]
 
 # Varsayılan Personel Tahakkuk / Borç Çeşitleri
