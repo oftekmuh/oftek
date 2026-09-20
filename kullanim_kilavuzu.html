@@ -482,6 +482,7 @@
             <h3>İçindekiler</h3>
             <ul>
                 <li><a href="#giris">1. Giriş & Hızlı Başlangıç</a></li>
+                <li><a href="#kimlik-dogrulama">🔐 İlk Kurulum, Giriş & Güvenlik Zırhı</a></li>
                 <li><a href="#mobil-ag">📱 Aynı Ağdan (Telefon/Tablet) Erişim</a></li>
                 <li><a href="#gunluk-kasa">2. Günlük Kasa & Gün Oturumu</a></li>
                 <li><a href="#cari-borclar">3. Cari Borç Takibi (Firma)</a></li>
@@ -568,6 +569,66 @@
                     <div style="font-size: 0.825rem; color: #1e40af; margin-top: 8px;">
                         <em>İpucu: Aynı Wi-Fi ağına bağlı telefon veya tabletinizden bağlanmak için, konsol penceresinde yazan yerel IP adresini (Örn: <code>http://192.168.1.X:8080</code>) kullanabilirsiniz.</em>
                     </div>
+                </div>
+            </section>
+
+            <!-- 🔐 İLK KURULUM, GİRİŞ & GÜVENLİK ZIRHI -->
+            <section id="kimlik-dogrulama" class="card">
+                <h2>🔐 İlk Kurulum, Güvenli Giriş & Ağ Zırhı</h2>
+                <p>
+                    <strong>oftek</strong>, işletmenizin finansal verilerini yerel ağda ve cihazınızda en üst düzeyde korumak amacıyla bankacılık standartlarında kriptografik kimlik doğrulama ve API yetki kalkanı (Auth Guard) ile donatılmıştır.
+                </p>
+
+                <div class="callout callout-info">
+                    <strong>Sıfır Dış Bağımlılık & PBKDF2-HMAC-SHA256:</strong> Şifreleriniz veritabanında asla düz metin (plaintext) olarak saklanmaz. Her kullanıcı için rastgele 16 baytlık tuz (salt) üretilir ve 100.000 iterasyon PBKDF2-HMAC-SHA256 ile kriptografik olarak özetlenir.
+                </div>
+
+                <h3>1. İlk Açılış Kurulum Sihirbazı (Setup)</h3>
+                <p>
+                    Programı ilk kez çalıştırdığınızda sistemde henüz kayıtlı bir kullanıcı bulunmadığı için ekranda otomatik olarak <strong>"İlk Kurulum: Yönetici Hesabı Oluştur"</strong> penceresi açılır.
+                </p>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-title">Kullanıcı Adı Belirleyin</div>
+                        <div class="step-desc">Giriş yaparken kullanacağınız yönetici kullanıcı adını (en az 3 karakter) yazın.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-title">Güçlü Bir Şifre Girin</div>
+                        <div class="step-desc">Sisteminizi koruyacak güvenli bir parola (en az 6 karakter) belirleyin ve şifre tekrarını yazın.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Ad & Soyad Ekleyin</div>
+                        <div class="step-desc">Arayüzde ve üst menü rozetinde görüntülenecek adınızı yazıp "Yönetici Hesabını Oluştur ve Giriş Yap" butonuna tıklayın.</div>
+                    </div>
+                </div>
+
+                <h3>2. Güvenli Giriş (Login) & Oturum Yönetimi</h3>
+                <p>
+                    İlk kurulumdan sonraki her açılışta veya oturumu kapattığınızda <strong>Güvenli Giriş</strong> ekranı görüntülenir. Başarılı girişte 64 karakterlik kriptografik oturum anahtarı (Session Token) oluşturulur.
+                </p>
+                <ul>
+                    <li><strong>Üst Menü Rozeti:</strong> Sağ üst köşede giriş yapan kullanıcının adı ve oturum rozeti yer alır.</li>
+                    <li><strong>Tek Tıkla Güvenli Çıkış:</strong> Üst menüdeki <code>[Çıkış]</code> butonuna bastığınızda oturum anahtarı anında hem tarayıcıdan hem de sunucu veritabanından kalıcı olarak silinir.</li>
+                    <li><strong>Şifre Değiştirme:</strong> Şifrenizi değiştirmek istediğinizde sol menüden <strong>[Sistem & Ayarlar]</strong> sekmesine gidip "Giriş Şifresini Değiştir" kartından mevcut şifrenizi doğrulayarak yeni şifrenizi belirleyebilirsiniz.</li>
+                </ul>
+
+                <h3>3. Ağ ve Veritabanı Güvenliği (Sıkça Sorulan Sorular)</h3>
+                <div class="callout callout-success" style="margin-bottom: 0.75rem;">
+                    <strong>🛡️ Yerel ağdaki biri doğrudan <code>muhasebe.db</code> dosyasını tarayıcıdan indirebilir mi?</strong><br>
+                    <strong>HAYIR.</strong> oftek web sunucusu, <code>.db</code>, <code>.sqlite</code>, <code>.py</code>, <code>.bat</code> veya <code>.env</code> gibi hassas dosyalara yapılan tüm doğrudan tarayıcı isteklerini algılar ve anında <strong>403 Forbidden (Erişim Reddedildi)</strong> yanıtıyla engeller.
+                </div>
+
+                <div class="callout callout-success" style="margin-bottom: 0.75rem;">
+                    <strong>🛡️ Arayüz kullanmadan konsol (curl / Postman) ile API'ye sızılabilir mi?</strong><br>
+                    <strong>HAYIR.</strong> Sistemde yer alan <em>Auth Guard</em> zırhı sayesinde, doğrulanmış ve aktif bir oturum token'ı içermeyen hiçbir istek API'den tek bir bayt veri dahi çekemez; sunucu tüm yetkisiz istekleri <strong>401 Unauthorized</strong> koduyla anında geri çevirir.
+                </div>
+
+                <div class="callout callout-success">
+                    <strong>🛡️ SQL Injection ile veritabanına sızılabilir mi?</strong><br>
+                    <strong>HAYIR.</strong> oftek'in veri tabanı katmanındaki tüm SQL sorguları parametreli (<code>?</code>) bağlama yöntemiyle çalışır. Kullanıcı girdisi hiçbir zaman ham metin olarak sorgulara yapıştırılmaz, bu nedenle SQL Injection saldırıları teorik ve pratik olarak imkansızdır.
                 </div>
             </section>
 
@@ -812,6 +873,7 @@
                     <li><strong>Personel Türleri:</strong> Kurumunuzdaki departman ve çalışan gruplarını (Beyaz Yaka, Mavi Yaka, Saha vb.) ekleyip yönetebilirsiniz.</li>
                     <li><strong>Personel Borç Çeşitleri:</strong> Hakediş, prim, mesai veya kesinti türlerini tanımlayabilirsiniz.</li>
                     <li><strong>Hesap Planı Araçları:</strong> Excel'den toplu içe aktarma araçlarına hızlı erişim sağlar.</li>
+                    <li><strong>Giriş Şifresini Değiştir:</strong> Aktif kullanıcının parolasını güvenli bir şekilde güncellemesini sağlar. Güvenlik gereği işlem için mevcut parolanın doğrulanması şarttır.</li>
                 </ul>
 
                 <div class="callout callout-danger">

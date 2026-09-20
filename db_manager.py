@@ -219,12 +219,28 @@ def init_database():
             web_adresi TEXT DEFAULT '',
             guncelleme_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+        INSERT OR IGNORE INTO sistem_ayarlari (id, kurum_adi, kurum_turu, para_birimi) VALUES (1, 'oftek', 'GENEL', '₺');
 
-        INSERT OR IGNORE INTO sistem_ayarlari (id, kurum_adi, kurum_turu, para_birimi)
-        VALUES (1, 'oftek', 'GENEL', '₺');
+        -- 4. Kimlik Doğrulama & Oturum Tabloları
+        CREATE TABLE IF NOT EXISTS kullanicilar (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            kullanici_adi TEXT UNIQUE NOT NULL,
+            sifre_hash TEXT NOT NULL,
+            salt TEXT NOT NULL,
+            ad_soyad TEXT DEFAULT '',
+            olusturma_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
+            son_giris_tarihi DATETIME
+        );
+        CREATE TABLE IF NOT EXISTS oturumlar (
+            token TEXT PRIMARY KEY,
+            kullanici_id INTEGER NOT NULL,
+            olusturma_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
+            son_islem_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(kullanici_id) REFERENCES kullanicilar(id) ON DELETE CASCADE
+        );
     """)
 
-    # 4. Performans & Hız İndeksleri (B-Tree)
+    # 5. Performans & Hız İndeksleri (B-Tree)
     cursor.executescript("""
         CREATE INDEX IF NOT EXISTS idx_fis_satirlari_hesap ON fis_satirlari(hesap_kod);
         CREATE INDEX IF NOT EXISTS idx_fis_satirlari_fis ON fis_satirlari(fis_id);
@@ -237,6 +253,8 @@ def init_database():
         CREATE INDEX IF NOT EXISTS idx_gunluk_islemler_donem ON gunluk_islemler(donem_yil, donem_ay);
         CREATE INDEX IF NOT EXISTS idx_gunluk_islemler_tur ON gunluk_islemler(islem_turu);
         CREATE INDEX IF NOT EXISTS idx_personel_tahakkuk_donem ON personel_tahakkuklari(donem_yil, donem_ay);
+        CREATE INDEX IF NOT EXISTS idx_oturumlar_token ON oturumlar(token);
+        CREATE INDEX IF NOT EXISTS idx_kullanicilar_kadi ON kullanicilar(kullanici_adi);
     """)
 
     # Standart tohum verilerini yükle

@@ -11,7 +11,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/Lisans-MIT-blue.svg" alt="Lisans: MIT" /></a>
   <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+" />
-  <img src="https://img.shields.io/badge/Testler-30%20Geçti-brightgreen.svg" alt="Test Durumu: 30 Başarılı" />
+  <img src="https://img.shields.io/badge/Testler-35%20Geçti-brightgreen.svg" alt="Test Durumu: 35 Başarılı" />
   <img src="https://img.shields.io/badge/Dış%20Bağımlılık-Sıfır-orange.svg" alt="Sıfır Harici Bağımlılık" />
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg" alt="Platform Desteği" />
 </p>
@@ -69,7 +69,8 @@ oftek, mimari olarak tamamen kurum bağımsızdır. **Sistem & Ayarlar** ekranı
 - 📱 **Aynı Yerel Ağdaki Diğer Cihazlardan (Telefon, Tablet, PC) Erişim:** Python'ın dahili web sunucusu `0.0.0.0:8080` üzerinde tüm yerel ağ arayüzlerini dinler. Programı tek bir bilgisayarda başlattığınızda, aynı Wi-Fi veya ofis ağına bağlı cep telefonu, tablet veya diğer bilgisayarlardan yerel IP adresiyle (Örn: `http://192.168.1.45:8080`) hiçbir kurulum yapmadan anında bağlanabilir, kasayı ve tahsilatları mobil cihazınızdan özgürce yönetebilirsiniz.
 - 🔄 **Çift Modlu Tahsilat Dağıtımı:** Müşteri ödemelerini ister tek tıkla otomatik **FIFO** ile dağıtın, ister açık faturaları görerek **Seçimli** tutar tahsis edin.
 - 👥 **Personel Yönetimi & Dinamik Ek Bilgiler:** Sınırsız dinamik ek bilgi alanı (Metin, Sayı, Tarih), personel türleri, borç çeşitleri yönetimi, dönemlik maaş tahakkukları ve parçalı avans yönetimi.
-- 📑 **Genel Hesap Planı & Mizan:** Excel şablonundan tek tıkla toplu hesap aktarımı ve geçici mizan raporu.
+- 🔐 **PBKDF2 Kriptografik Kimlik Doğrulama & Giriş Ekranı:** Şifreler asla düz metin (plaintext) saklanmaz. Rastgele 16 baytlık tuz (salt) ve 100.000 iterasyon PBKDF2-HMAC-SHA256 ile özetlenir (`hmac.compare_digest` ile zamanlama saldırılarına karşı korumalı). İlk açılışta tek seferlik kurulum sihirbazı, güvenli giriş ekranı, tek tıkla çıkış ve Sistem Ayarları sekmesinden güvenli parola değiştirme paneli.
+- 🛡️ **API Güvenlik Zırhı (Auth Guard) & Ağ Koruması:** Aktif ve doğrulanmış oturum anahtarı (Token) bulunmayan tüm harici konsol (curl/Postman) veya tarayıcı istekleri `401 Unauthorized` ile engellenir. Web sunucusu `.db`, `.sqlite`, `.py`, `.bat`, `.env` dosyalarının doğrudan tarayıcıdan indirilmesini `403 Forbidden` ile durdurur. Tüm sorgular parametreli SQLite (`?`) ile çalıştığı için SQL Injection saldırılarına karşı %100 bağışıktır.
 - 🛡️ **Kırmızı Alan (Danger Zone) Emniyeti:** Operasyonel verileri sıfırlarken kazaen kayıpları engellemek için büyük harfle **"SIFIRLA"** yazma şartı içeren çift korumalı onay mekanizması.
 
 ---
@@ -123,7 +124,7 @@ Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
 
 ## 🧪 Birim ve Entegrasyon Testleri
 
-oftek, 30 adet kapsamlı otomatik test ile korunmaktadır. Testleri çalıştırmak için:
+oftek, 35 adet kapsamlı otomatik test ile korunmaktadır. Testleri çalıştırmak için:
 
 ```bash
 # Dahili Python ile (Windows):
@@ -140,21 +141,23 @@ python -m unittest discover tests
 ```text
 oftek/
 ├── app.py                      # Ana başlatıcı (sys.path ve otomatik tarayıcı açıcı)
-├── server.py                   # Yerel HTTP sunucusu ve REST yönlendirici
+├── server.py                   # Yerel HTTP sunucusu, Auth Guard ve REST yönlendirici
 ├── baslat.bat                  # Taşınabilir akıllı Windows başlatıcı (ayrıntılı teşhis & geri bildirim)
 ├── python/                     # Windows için dahili gömülü Python 3.11 motoru (~20 MB)
 ├── db_manager.py               # SQLite bağlantı, şema ve indeks yöneticisi (< 300 satır)
 ├── db_seed.py                  # Standart hesap planı ve tohum veriler (< 300 satır)
+├── auth_manager.py             # PBKDF2 kriptografik özetleme ve oturum motoru (< 300 satır)
+├── handlers_auth.py            # İlk kurulum, login, logout ve şifre API rotaları (< 300 satır)
 ├── accounting_engine.py        # FIFO ve finansal hesaplama motoru
 ├── accounting_voucher.py       # Çift taraflı yevmiye fiş üretim motoru
-├── api_handlers.py             # REST API modüler yönlendiricisi
+├── api_handlers.py             # REST API modüler yönlendiricisi ve Auth Guard
 ├── handlers_*.py               # Modüler API servis işleyicileri (ayarlar, cariler, personel vb.)
 ├── web/
 │   ├── index.html              # Modern, %100 genişlikte, sıfır dropdown kullanıcı arayüzü
-│   ├── js/                     # Modüler istemci iş mantıkları (dashboard, debts vb.)
+│   ├── js/                     # Modüler istemci iş mantıkları (auth, dashboard, debts vb.)
 │   ├── css/                    # Özel stiller
 │   └── img/                    # Kurumsal logo ve ikon varlıkları
-├── tests/                      # 30/30 Tam kapsamlı otomatik test paketi
+├── tests/                      # 35/35 Tam kapsamlı otomatik test paketi
 ├── .github/workflows/          # GitHub Actions CI/CD otomatik test iş akışı
 ├── CONTRIBUTING.md             # Katkı sağlama ve kodlama standartları rehberi
 ├── SECURITY.md                 # Güvenlik politikası ve yerel veri emniyeti

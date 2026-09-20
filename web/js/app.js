@@ -179,6 +179,15 @@ function setQuickIncSource(val, btn) {
 
 // ================= DOM HAZIR VE BAŞLANGIÇ =================
 window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Güvenlik Zırhı: Kimlik doğrulama ve ilk kurulum kontrolü
+    if (window.authModule && typeof window.authModule.checkStatus === 'function') {
+        const isAuthed = await window.authModule.checkStatus();
+        if (!isAuthed) {
+            // Giriş veya ilk kurulum tamamlanana kadar diğer API çağrılarını beklet
+            return;
+        }
+    }
+
     if (typeof checkSession === 'function') await checkSession();
     if (typeof loadInstitutionProfile === 'function') await loadInstitutionProfile();
     if (typeof loadEmployeeTypes === 'function') await loadEmployeeTypes();

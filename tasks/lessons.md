@@ -73,5 +73,14 @@
   2. Değişken atamalarında `set "VAR=DEGER"` kalıbı kullanılmalıdır.
   3. Parantez blokları yerine doğrudan tek satırlı `if exist ... goto ...` tercih edilmelidir.
   4. Script metinlerinde kaçışsız parantez `(` `)` yerine köşeli parantez `[` `]` tercih edilmelidir.
+- **Kriptografik Kimlik Doğrulama & PBKDF2 Standardı (Sıfır Dış Bağımlılık)**:
+  Kullanıcı şifreleri veritabanında asla düz metin (plaintext) tutulmamalıdır. Python standart kütüphanesindeki `hashlib.pbkdf2_hmac` ile SHA256, rastgele 16 byte tuz (salt) ve 100.000 iterasyon kullanılmalıdır. Şifre doğrulaması `hmac.compare_digest` ile zamanlama saldırılarına (timing-attack) karşı tam korumalı yapılmalıdır. Harici pip kütüphanesine (bcrypt vb.) asla ihtiyaç duyulmaz.
+- **Yerel Ağda API Güvenlik Zırhı (Auth Guard)**:
+  Sistem yerel ağa (`0.0.0.0:8080`) açıldığında kimlik doğrulamasız API erişimi engellenmelidir. `/api/auth/*` dışındaki tüm korumalı API uç noktaları doğrulanmış bir `X-Session-Token` (veya Bearer / Cookie) gerektirmelidir; geçersiz veya bulunmayan token durumunda sunucu anında `401 Unauthorized` dönmelidir. İstemci tarafında `window.fetch` sarmalanarak tüm isteklere otomatik token eklenmeli ve 401 yanıtında otomatik login penceresi açılmalıdır.
+- **Hassas Dosya Doğrudan İndirme Koruması (HTTP 403)**:
+  Web sunucusu (`server.py`), `.db`, `.sqlite`, `.py`, `.bat`, `.env` uzantılı dosyalara yönelik doğrudan statik web isteklerini kesinlikle engellemeli ve `403 Forbidden` yanıtı vermelidir. Böylece yerel ağdaki hiçbir istemci `http://IP:8080/muhasebe.db` yazarak veritabanı dosyasını indiremez.
+- **Parametreli SQL & SQL Injection Bağışıklığı**:
+  Tüm veritabanı sorguları SQLite parametreli (`?`) bağlama yöntemiyle çalıştırılmalı; dinamik string birleştirmeyle SQL oluşturulması kesinlikle yasaklanmalıdır.
+
 
 

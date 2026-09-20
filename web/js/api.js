@@ -63,3 +63,38 @@ function focusNextElement(currentEl) {
         }
     }
 }
+
+// Global Güvenli Fetch Wrapper (X-Session-Token Entegrasyonu & 401 Yakalama)
+const _originalFetch = window.fetch;
+window.fetch = async function(url, options = {}) {
+    options = options || {};
+    options.headers = options.headers || {};
+
+    const token = (window.authModule && typeof window.authModule.getToken === 'function') 
+        ? window.authModule.getToken() 
+        : (localStorage.getItem('oftek_session_token') || sessionStorage.getItem('oftek_session_token') || '');
+
+    if (token) {
+        if (options.headers instanceof Headers) {
+            if (!options.headers.has('X-Session-Token')) {
+                options.headers.set('X-Session-Token', token);
+            }
+        } else if (Array.isArray(options.headers)) {
+            options.headers.push(['X-Session-Token', token]);
+        } else {
+            options.headers['X-Session-Token'] = token;
+        }
+    }
+
+    const response = await _originalFetch(url, options);
+
+    // 401 Yetkisiz Erişim Yakalama (Giriş ve durum rotaları hariç)
+    if (response.status === 401 && typeof url === 'string' && !url.includes('/api/auth/')) {
+        if (window.authModule && typeof window.authModule.showLoginModal === 'function') {
+            window.authModule.clearToken();
+            window.authModule.showLoginModal();
+        }
+    }
+
+    return response;
+};

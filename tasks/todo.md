@@ -272,6 +272,17 @@
 - [x] Doğrulama: `cmd.exe /c baslat.bat` ile arka planda sunucunun sorunsuz ayağa kalktığı ve dinlediği doğrulandı
 - [x] Test & Git: 30/30 test yeşil, anonim kimlikle GitHub'a push edildi
 
+## Faz 30: Kriptografik Kimlik Doğrulama (Auth), Giriş Ekranı ve API Güvenlik Zırhı
+- [x] Veritabanı Şeması (`db_manager.py`): `kullanicilar` ve `oturumlar` tabloları ve B-Tree indeksleri (`idx_oturumlar_token`, `idx_kullanicilar_kadi`)
+- [x] Güvenlik Motoru (`auth_manager.py`): PBKDF2-HMAC-SHA256 (100.000 iterasyon + 16 byte tuz), `hmac.compare_digest`, token yönetimi (< 300 satır)
+- [x] API Servisi (`handlers_auth.py`): Status, Setup, Login, Logout, Change-Password uç noktaları (< 300 satır)
+- [x] API Yönlendirici & Güvenlik Bekçisi (`server.py` & `api_handlers.py`): Korumalı rotalar için 401 Unauthorized yetki kontrolü ve .db/.py dosya indirme engeli (HTTP 403)
+- [x] Kullanıcı Arayüzü (`web/index.html`, `web/js/auth.js`): İlk Kurulum Sihirbazı, Güvenli Giriş (Login) Ekranı, Header [Çıkış Yap] butonu, kullanıcı rozeti ve Ayarlar Şifre Değiştirme
+- [x] Testler & Doğrulama: `tests/test_auth.py` ile PBKDF2, yetkilendirme ve API zırh testlerinin yazılması, 35/35 testin eksiksiz yeşil geçmesi
+- [x] Dokümantasyon & Git: `README.md`, `kullanim_kilavuzu.html`, `tasks/lessons.md` güncellemeleri ve GitHub push
+
+
+
 
 
 

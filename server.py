@@ -65,6 +65,22 @@ class MainRequestHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(content_length).decode("utf-8")
         return json.loads(body)
 
+    def _extract_token(self):
+        token = self.headers.get("X-Session-Token")
+        if token:
+            return token.strip()
+        auth = self.headers.get("Authorization", "")
+        if auth.lower().startswith("bearer "):
+            return auth[7:].strip()
+        cookie_str = self.headers.get("Cookie", "")
+        if cookie_str:
+            for part in cookie_str.split(";"):
+                if "=" in part:
+                    k, v = part.strip().split("=", 1)
+                    if k in ["oftek_token", "session_token"]:
+                        return v.strip()
+        return ""
+
     def do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
@@ -74,6 +90,12 @@ class MainRequestHandler(BaseHTTPRequestHandler):
         clean_path = path.lstrip("/")
         if path in ["/", "/index.html"]:
             clean_path = "index.html"
+
+        # Güvenlik Zırhı: Hassas sistem ve veritabanı dosyalarını kesinlikle dışarı verme
+        if any(clean_path.lower().endswith(ext) for ext in [".db", ".sqlite", ".py", ".bat", ".env", ".key"]):
+            self._set_headers(403, "text/plain; charset=utf-8")
+            self.wfile.write("Erişim Engellendi (403 Forbidden)".encode("utf-8"))
+            return
 
         potential_static = os.path.normpath(os.path.join(WEB_DIR, clean_path))
         if os.path.commonpath([potential_static, WEB_DIR]) == WEB_DIR and os.path.isfile(potential_static):
