@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oftek - Kullanım Kılavuzu</title>
+    <link rel="icon" type="image/png" href="web/img/logo-sade.png">
+
+    <!-- Temel SEO Meta Etiketleri -->
+    <meta name="description" content="oftek Kullanım Kılavuzu: Açık kaynak, bağımsız ve taşınabilir ön muhasebe, cari takip, kasa yönetimi ve yevmiye fişi sistemi rehberi.">
+    <meta name="keywords" content="oftek, kullanım kılavuzu, ön muhasebe, cari takip, kasa yönetimi, yevmiye fişi, genel hesap planı, açık kaynak rehber">
+    <meta name="author" content="oftek Open Source Project">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="tr">
+
+    <!-- Coğrafi (GEO) Meta Etiketleri -->
+    <meta name="geo.region" content="TR">
+    <meta name="geo.placename" content="Türkiye">
+    <meta name="geo.position" content="39.9334;32.8597">
+    <meta name="ICBM" content="39.9334, 32.8597">
+
+    <!-- Open Graph Meta Etiketleri -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="oftek">
+    <meta property="og:title" content="oftek - Kullanım Kılavuzu">
+    <meta property="og:description" content="Açık kaynak ön muhasebe, cari takip ve yevmiye fişi sistemi kullanım rehberi.">
+    <meta property="og:image" content="web/img/logo-isim.png">
+    <meta property="og:locale" content="tr_TR">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --emerald: #059669;
+            --emerald-bg: #ecfdf5;
+            --amber: #d97706;
+            --amber-bg: #fffbeb;
+            --rose: #e11d48;
+            --rose-bg: #fff1f2;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--slate-50);
+            color: var(--slate-700);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            border-bottom: 1px solid var(--slate-200);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .guide-logo-img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.08));
+        }
+
+        .logo-badge {
+            display: none;
+        }
+
+        .logo-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .logo-sub {
+            font-size: 0.8rem;
+            color: var(--slate-500);
+        }
+
+        .badge-portable {
+            background: var(--emerald-bg);
+            color: var(--emerald);
+            border: 1px solid #a7f3d0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Ana Düzen */
+        .layout-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Sol Navigasyon */
+        aside {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 5rem;
+            height: calc(100vh - 6rem);
+            overflow-y: auto;
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 1.25rem 1rem;
+        }
+
+        aside h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--slate-400);
+            margin-bottom: 0.75rem;
+            padding-left: 0.5rem;
+        }
+
+        aside ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        aside a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.15s ease;
+        }
+
+        aside a:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Sağ İçerik */
+        main {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--slate-900);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--slate-100);
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--slate-800);
+            margin: 1.25rem 0 0.5rem 0;
+        }
+
+        p {
+            font-size: 0.925rem;
+            color: var(--slate-600);
+            margin-bottom: 0.85rem;
+            line-height: 1.65;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--slate-600);
+            font-size: 0.925rem;
+        }
+
+        li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Bilgi Kutuları */
+        .callout {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            border-left: 4px solid transparent;
+        }
+
+        .callout-info {
+            background: var(--blue-bg);
+            border-color: var(--blue);
+            color: #1e40af;
+        }
+
+        .callout-success {
+            background: var(--emerald-bg);
+            border-color: var(--emerald);
+            color: #065f46;
+        }
+
+        .callout-warning {
+            background: var(--amber-bg);
+            border-color: var(--amber);
+            color: #92400e;
+        }
+
+        .callout-danger {
+            background: var(--rose-bg);
+            border-color: var(--rose);
+            color: #9f1239;
+        }
+
+        /* Tıklanabilir & Kopyalanabilir Link Kutusu */
+        .link-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1px solid var(--slate-300);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.85rem;
+            margin: 3px 0;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+
+        .link-box a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .link-box a:hover {
+            color: var(--primary-dark);
+        }
+
+        .btn-copy {
+            background: var(--slate-100);
+            border: 1px solid var(--slate-300);
+            color: var(--slate-700);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .btn-copy:hover {
+            background: var(--slate-200);
+            color: var(--slate-900);
+        }
+
+        .btn-copy.copied {
+            background: #ecfdf5;
+            color: #059669;
+            border-color: #a7f3d0;
+        }
+
+        /* Klavye Tuşu Biçimi (KBD) */
+        kbd {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-weight: 600;
+            color: var(--slate-700);
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-bottom: 2px solid #94a3b8;
+            border-radius: 6px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+        }
+
+        /* Tablolar */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background: var(--slate-50);
+            color: var(--slate-700);
+            font-weight: 600;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-600);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Adım Kartları */
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .step-card {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 0.35rem;
+            font-size: 0.95rem;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--slate-500);
+            line-height: 1.5;
+        }
+
+        /* Kod Bloğu */
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.825rem;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .layout-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            aside {
+                width: 100%;
+                position: static;
+                height: auto;
+                max-height: 220px;
+            }
+        }
+
+        @media print {
+            aside, header {
+                display: none !important;
+            }
+            .layout-container {
+                padding: 0;
+            }
+            .card {
+                border: none;
+                box-shadow: none;
+                padding: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Üst Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <img src="web/img/logo-sade.png" alt="oftek Logo" class="guide-logo-img">
+                <div>
+                    <div class="logo-title">oftek Kullanım Kılavuzu & Başlangıç Rehberi</div>
+                    <div class="logo-sub">Operasyonel Takip & Gün Sonu Otomatik Fiş Sistemi</div>
+                </div>
+            </div>
+            <div>
+                <span class="badge-portable">✓ Taşınabilir / Dahili Python 3.11</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ana Gövde -->
+    <div class="layout-container">
+
+        <!-- Sol Hızlı Menü -->
+        <aside>
+            <h3>İçindekiler</h3>
+            <ul>
+                <li><a href="#giris">1. Giriş & Hızlı Başlangıç</a></li>
+                <li><a href="#gunluk-kasa">2. Günlük Kasa & Gün Oturumu</a></li>
+                <li><a href="#cari-borclar">3. Cari Borç Takibi (Firma)</a></li>
+                <li><a href="#alacak-tahsilat">4. Alacak & Tahsilat (FIFO)</a></li>
+                <li><a href="#personel">5. Personel Yönetimi & Maaş</a></li>
+                <li><a href="#tahakkuk-fisi">6. Personel Tahakkuk Fişi</a></li>
+                <li><a href="#yevmiye-fisi">7. Yeni Yevmiye Fişi Girişi</a></li>
+                <li><a href="#kisayollar">8. Klavye Kısayolları</a></li>
+                <li><a href="#hesap-plani">9. Genel Hesap Planı & Mizan</a></li>
+                <li><a href="#raporlar-analiz">10. Mali Raporlar & Canlı Analiz</a></li>
+                <li><a href="#sistem-ayarlar">11. Sistem & Ayarlar (Kırmızı Alan)</a></li>
+                <li><a href="#yedekleme">12. Yedekleme & Güvenli Çıkış</a></li>
+            </ul>
+        </aside>
+
+        <!-- Sağ Ana İçerik -->
+        <main>
+
+            <!-- 1. GİRİŞ & HIZLI BAŞLANGIÇ -->
+            <section id="giris" class="card">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.5rem;">
+                    <h2>1. Giriş & Hızlı Başlangıç</h2>
+                    <img src="web/img/logo-isim.png" alt="oftek" style="height: 42px; width: auto; object-fit: contain;">
+                </div>
+                <p>
+                    <strong>oftek</strong>, ön muhasebe ve operasyonel süreçleri (kasa hareketleri, faturalar, tahsilatlar, personel hakedişleri) anlık takip eden ve gün sonunda tek tıkla resmi çift taraflı (Borç = Alacak) Yevmiye Fişine bağlayan modern, taşınabilir bir işletim sistemidir.
+                </p>
+
+                <!-- ZIP ÇIKARMA UYARISI -->
+                <div class="callout callout-danger" style="font-size: 0.95rem; border-left-width: 6px; padding: 1.15rem;">
+                    <div style="font-weight: 800; font-size: 1.05rem; margin-bottom: 0.4rem;">
+                        ⚠️ ÇOK ÖNEMLİ: Dosyalar ZIP Arşivindeyse MUTLAKA ZİPTEN ÇIKARINIZ!
+                    </div>
+                    Programı internetten, e-postadan veya başka bir bilgisayardan <strong>.zip (sıkıştırılmış arşiv)</strong> olarak aldıysanız, <strong>asla zip penceresinin içindeyken <code>baslat.bat</code> dosyasına çift tıklamayınız!</strong><br>
+                    Windows zip içindeki dosyaları geçici salt-okunur bellekte açar ve veritabanı dosyaları kaydedilemez.<br><br>
+                    <strong>Ne Yapmalısınız?</strong><br>
+                    1. <code>.zip</code> dosyasına sağ tıklayın.<br>
+                    2. <strong>"Tümünü Ayıkla..."</strong> (veya <em>Klasöre Çıkar</em>) seçeneğine tıklayın.<br>
+                    3. Dosyaları flash diskinize veya bilgisayarınızda normal bir klasöre çıkartın.<br>
+                    4. Ardından çıkarttığınız klasördeki <strong><code>baslat.bat</code></strong> dosyasına çift tıklayarak sistemi başlatın.
+                </div>
+
+                <div class="callout callout-success">
+                    <strong>Kurulum Gerektirmez:</strong> Program, içerisindeki dahili gömülü Python motoruyla birlikte gelir. Bilgisayara Python veya harici hiçbir paket yüklemeniz gerekmez.
+                </div>
+
+                <h3>Sistemi Başlatma Adımları</h3>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-title">Klasörü Açın</div>
+                        <div class="step-desc">Zipten çıkardığınız veya flash diskinizdeki <code>oftek</code> klasörüne girin.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-title">baslat.bat'a Tıklayın</div>
+                        <div class="step-desc"><code>baslat.bat</code> dosyasına çift tıklayın. Siyah komut konsolu açılacaktır.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Tarayıcıda Çalışın</div>
+                        <div class="step-desc">Sistem otomatik olarak tarayıcınızda açılacaktır. Açılmazsa aşağıdaki adresi kullanabilirsiniz.</div>
+                    </div>
+                </div>
+
+                <!-- TIKLANABİLİR & KOPYALANABİLİR LİNK BÖLÜMÜ -->
+                <div class="callout callout-info">
+                    <div style="font-weight: 700; margin-bottom: 0.35rem;">🌐 Web Giriş Adresleri (Tıklayabilir veya Kopyalayabilirsiniz):</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
+                        <span class="link-box">
+                            <a href="http://localhost:8080" target="_blank" title="oftek Ana Sayfasını Yeni Sekmede Aç">http://localhost:8080</a>
+                            <button type="button" class="btn-copy" onclick="copyToClipboard('http://localhost:8080', this)">📋 Kopyala</button>
+                        </span>
+                        <span class="link-box">
+                            <a href="http://127.0.0.1:8080" target="_blank" title="Yerel IP ile Aç">http://127.0.0.1:8080</a>
+                            <button type="button" class="btn-copy" onclick="copyToClipboard('http://127.0.0.1:8080', this)">📋 Kopyala</button>
+                        </span>
+                        <span class="link-box">
+                            <a href="http://localhost:8080/kilavuz" target="_blank" title="Kullanım Kılavuzunu Webden Aç">http://localhost:8080/kilavuz</a>
+                            <button type="button" class="btn-copy" onclick="copyToClipboard('http://localhost:8080/kilavuz', this)">📋 Kopyala</button>
+                        </span>
+                    </div>
+                    <div style="font-size: 0.825rem; color: #1e40af; margin-top: 8px;">
+                        <em>İpucu: Aynı Wi-Fi ağına bağlı telefon veya tabletinizden bağlanmak için, konsol penceresinde yazan yerel IP adresini (Örn: <code>http://192.168.1.X:8080</code>) kullanabilirsiniz.</em>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. GÜNLÜK KASA & GÜN OTURUMU -->
+            <section id="gunluk-kasa" class="card">
+                <h2>2. Günlük Kasa & Gün Oturumu</h2>
+                <p>
+                    oftek sisteminde işlemler günlük oturumlar üzerinden yürütülür. Bu sayede gün içi operasyonel serbestlik sağlanırken, geriye dönük veri kilit mekanizmasıyla finansal bütünlük korunur.
+                </p>
+
+                <h3>Gün Açma & Kapatma</h3>
+                <ul>
+                    <li><strong>Günü Aç:</strong> Üst menüdeki <span style="color:var(--emerald); font-weight:bold;">[Gün Aç]</span> butonuna basın. İşlem tarihini seçerek günü başlatın.</li>
+                    <li><strong>Gün İçi Hareketler:</strong> Gün açıkken yapılan tüm tahsilatlar, ödemeler ve fişler aktif günün kayıt havuzunda toplanır.</li>
+                    <li><strong>Günü Kapat (Otomatik Fişleme):</strong> Akşam iş bitiminde <span style="color:var(--rose); font-weight:bold;">[Günü Kapat]</span> butonuna tıklayın. Sistem tüm gün içi hareketleri özetler ve tek tıkla resmi bir <strong>Gün Sonu Mahsup Yevmiye Fişi</strong> oluşturarak günü kilitler.</li>
+                </ul>
+
+                <h3>Hızlı Gelir & Gider Fişleri</h3>
+                <p>
+                    Önceden tanımlı veya faturalı olmayan anlık harcamalar (Örn: Kırtasiye, Yemek, Çay-Kahve, Akaryakıt vb.) için <strong>[Hızlı Gider]</strong>, anlık kasa girişleri için ise <strong>[Hızlı Gelir]</strong> butonlarını kullanarak saniyeler içinde kayıt yapabilirsiniz.
+                </p>
+            </section>
+
+            <!-- 3. CARİ BORÇ TAKİBİ -->
+            <section id="cari-borclar" class="card">
+                <h2>3. Cari Borç Takibi (Firma & Tedarikçiler)</h2>
+                <p>
+                    Mal veya hizmet aldığınız tedarikçi firmaların faturalarını, kalan borç bakiyelerini ve yapılan ödemeleri bu ekrandan yönetebilirsiniz.
+                </p>
+
+                <ul>
+                    <li><strong>Firma Faturası Ekleme:</strong> <code>[+ Firma Faturası Ekle]</code> butonu ile fatura numarası, vade tarihi ve tutarı girin. Firma seçimi yazarak arama (otomatik tamamlama) ile anında yapılır.</li>
+                    <li><strong>Parçalı / Kısmi Ödeme:</strong> Borç listesindeki herhangi bir faturanın yanındaki <strong>[Ödeme Yap]</strong> butonuna tıklayarak faturanın tamamını veya dilediğiniz kısmını nakit ya da bankadan ödeyebilirsiniz. Kalan bakiye canlı olarak güncellenir.</li>
+                </ul>
+            </section>
+
+            <!-- 4. ALACAK & TAHSİLAT -->
+            <section id="alacak-tahsilat" class="card">
+                <h2>4. Alacak & Tahsilat (FIFO ve Seçimli Dağıtım)</h2>
+                <p>
+                    Müşterilerden olan alacaklarınızı takip eder ve tahsilatları iki farklı akıllı yöntemle dağıtabilirsiniz:
+                </p>
+
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-title">Mod 1: Otomatik FIFO Dağıtım</div>
+                        <div class="step-desc">Müşteriden gelen toplam tahsilat tutarını girin. Sistem müşterinin en eski açık faturasından başlayarak borçları otomatik olarak sırayla kapatır.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">Mod 2: Seçimli Manuel Dağıtım</div>
+                        <div class="step-desc">Müşterinin açık faturalarını listeden görerek, hangi faturaya ne kadar tutar tahsis etmek istediğinizi kendiniz belirleyip kapatabilirsiniz.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. PERSONEL YÖNETİMİ & MAAŞ -->
+            <section id="personel" class="card">
+                <h2>5. Personel Yönetimi & Maaş Takibi</h2>
+                <p>
+                    Çalışanlarınızın kartlarını, türlerini ve sınırsız ek bilgilerini yönetebileceğiniz merkezdir.
+                </p>
+
+                <h3>Öne Çıkan Özellikler</h3>
+                <ul>
+                    <li><strong>Personel Türleri:</strong> Beyaz Yaka, Mavi Yaka, Saha, Yönetim vb. türler tanımlayarak çalışanları gruplandırabilirsiniz.</li>
+                    <li><strong>Sınırsız Dinamik Ek Bilgi:</strong> Her personele dilediğiniz sayıda özel bilgi alanı (Örn: <em>Servis Güzergahı</em> [Metin], <em>Çocuk Sayısı</em> [Sayı], <em>Sözleşme Bitiş</em> [Tarih]) ekleyebilirsiniz.</li>
+                    <li><strong>Dönemsel Maaş Tahakkuku:</strong> Ay başında tek tıkla seçili ayın maaşını personelin bakiyesine hakediş olarak tahakkuk ettirebilirsiniz. Sistem aynı aya mükerrer maaş tahakkuk ettirilmesini otomatik olarak engeller.</li>
+                    <li><strong>Parçalı Avans / Maaş Ödemesi:</strong> Personelin biriken hakedişinden kasa veya bankadan avans ödemesi düşebilirsiniz.</li>
+                </ul>
+            </section>
+
+            <!-- 6. PERSONEL TAHAKKUK FİŞİ -->
+            <section id="tahakkuk-fisi" class="card">
+                <h2>6. Personel Tahakkuk Fişi & Raporlama</h2>
+                <p>
+                    Klasik sabit maaş dışında personele yansıtılması gereken prim, yol, yemek, ikramiye, fazla mesai hakedişleri veya yasal kesintiler için özel tahakkuk fişidir.
+                </p>
+
+                <div class="callout callout-info">
+                    <strong>Çeşit Yönetimi:</strong> Dilediğiniz borç çeşidini (Örn: <em>Bayram Primi</em>, <em>Yemek Yardımı</em>, <em>İcra Kesintisi</em>) Sistem & Ayarlar sayfasından yönüyle (Hakediş / Kesinti) birlikte özgürce tanımlayabilirsiniz.
+                </div>
+
+                <h3>Dönemsel Tahakkuk Raporu</h3>
+                <p>
+                    Sayfanın alt bölümünde yer alan rapor tablosu sayesinde, seçilen Mali Yıl ve Ay filtresine göre hangi personele ne kadar prim, mesai veya hakediş yazıldığını kalem kalem ve toplamlar halinde anında görebilirsiniz.
+                </p>
+            </section>
+
+            <!-- 7. YENİ YEVMİYE FİŞİ GİRİŞİ -->
+            <section id="yevmiye-fisi" class="card">
+                <h2>7. Yeni Yevmiye Fişi Girişi (Desktop-Class)</h2>
+                <p>
+                    Masaüstü muhasebe hızında, tam ekran çalışan, çok satırlı serbest yevmiye fişi giriş ekranıdır.
+                </p>
+
+                <h3>Desteklenen Fiş Tipleri</h3>
+                <p>
+                    Fiş girişi üst araç çubuğundaki buton segmentinden fiş tipini tek tıkla seçebilirsiniz:
+                </p>
+                <ul>
+                    <li><strong>MAHSUP:</strong> Kasa/Banka dışındaki hesapların virman ve mahsup kayıtları.</li>
+                    <li><strong>TAHAKKUK:</strong> Gider ve borçların dönemsel tahakkuk kayıtları.</li>
+                    <li><strong>DÜZELTME:</strong> Hatalı kayıtların ters kayıt veya düzeltme fişleri.</li>
+                    <li><strong>AÇILIŞ:</strong> Dönem başı veya kuruluş bilançosu açılış kaydı.</li>
+                    <li><strong>KAPANIŞ:</strong> Dönem sonu hesap kapatma kayıtları.</li>
+                </ul>
+
+                <div class="callout callout-warning">
+                    <strong>Borç = Alacak Denkliği:</strong> Sistem çift taraflı muhasebe standardı gereği Borç toplamı ile Alacak toplamı eşitlenmeden (Fark: 0.00 ₺ olmadan) fişin kaydedilmesine izin vermez.
+                </div>
+            </section>
+
+            <!-- 8. KLAVYE KISAYOLLARI -->
+            <section id="kisayollar" class="card">
+                <h2>8. Klavye Kısayolları (Seri Veri Girişi)</h2>
+                <p>
+                    Fiş ekranında fareye hiç dokunmadan, yalnızca klavye ile ışık hızında fiş girişi yapabilirsiniz:
+                </p>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kısayol Tuşu</th>
+                                <th style="width: 35%;">İşlem</th>
+                                <th>Açıklama</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><kbd>Tab</kbd></td>
+                                <td>İlk Seçeneği Seç & İlerle</td>
+                                <td>Hesap veya açıklama ararken listedeki ilk seçeneği seçip sonraki hücreye geçer. Son alanda basıldığında otomatik <strong>Yeni Satır</strong> açar.</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Ctrl</kbd> + <kbd>K</kbd></td>
+                                <td>Kasa ile Otomatik Dengele</td>
+                                <td>Borç ve alacak arasındaki farkı hesaplar ve tek tuşla <strong>100 Kasa</strong> hesabına dengeleyici yeni satır olarak ekler.</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Ctrl</kbd> + <kbd>D</kbd> veya <kbd>Ctrl</kbd> + <kbd>'</kbd></td>
+                                <td>Üst Satırı Kopyala</td>
+                                <td>Excel benzeri mantıkla bir üst satırın hesap kodu ve açıklamasını anında geçerli satıra kopyalar.</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>F2</kbd></td>
+                                <td>Yeni Satır Ekle</td>
+                                <td>Fişe anında yeni bir boş satır ekler ve ilk hücreye odaklanır.</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Ctrl</kbd> + <kbd>S</kbd></td>
+                                <td>Fişi Kaydet</td>
+                                <td>Borç ve Alacak eşitse fişi doğrudan veritabanına kaydeder ve yevmiye defterine bağlar.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 9. GENEL HESAP PLANI & MİZAN -->
+            <section id="hesap-plani" class="card">
+                <h2>9. Genel Hesap Planı & Mizan</h2>
+                <p>
+                    İşletmenizin tüm aktif, pasif, gelir ve gider hesaplarını bu bölümden takip edebilirsiniz.
+                </p>
+
+                <ul>
+                    <li><strong>Hesap Planı Arama:</strong> Hesap kodu veya adı yazarak yüzlerce hesap arasından anlık süzme yapabilirsiniz.</li>
+                    <li><strong>Excel ile Toplu Yükleme:</strong> Kendi hesap planınızı Excel tablosundan tek tıkla sisteme aktarabilir veya sistemden örnek şablon indirebilirsiniz.</li>
+                    <li><strong>Genel Geçici Mizan:</strong> Tüm hesapların toplam borç, toplam alacak, borç bakiyesi ve alacak bakiyesini dönemsel olarak mizan tablosundan izleyebilirsiniz.</li>
+                </ul>
+            </section>
+
+            <!-- 10. MERKEZİ RAPORLAR & EKRAN İÇİ CANLI ANALİZ -->
+            <section id="raporlar-analiz" class="card">
+                <h2>10. Mali Raporlar & Ekran İçi Canlı Analiz Merkezi</h2>
+                <p>
+                    Sol menüdeki <strong>[Raporlar & Analiz]</strong> sekmesi, harici dosya aktarımına bağımlı kalmadan tüm finansal hareketleri doğrudan ekran üzerinde anlık filtrelemenizi ve denetlemenizi sağlar.
+                </p>
+
+                <h3>Öne Çıkan Raporlama Yetenekleri:</h3>
+                <ul>
+                    <li><strong>5 Alt Sekme:</strong> Kasa & Nakit Akış, Cari Bakiyeler, Personel Bordro / Hakediş, Genel Mizan ve Muavin Defteri (Hesap Ekstresi).</li>
+                    <li><strong>0 Dropdown ile Hızlı Dönem Butonları:</strong> [Bugün], [Bu Hafta], [Bu Ay], [Bu Yıl] ve [Tümü] buton segmentleri ile tek tıkla dönem süzme.</li>
+                    <li><strong>Serbest Tarih Aralığı:</strong> Dilediğiniz başlangıç ve bitiş tarihlerini girerek geçmiş veya gelecek analizleri çekme.</li>
+                    <li><strong>Anlık İstemci Taraflı Arama (Instant Search):</strong> Arama kutusuna yazdığınız anda tablo satırları filtrelenir ve özet kartları (Toplam Giriş/Çıkış veya Borç/Alacak) filtrelenen satırlara göre dinamik olarak anında yeniden toplanır.</li>
+                    <li><strong>Muavin Defteri & Yürüyen Bakiye:</strong> Herhangi bir ana veya alt hesabı (100 Kasa, 102 Banka, 120 Müşteriler, 320 Satıcılar vb.) seçerek kronolojik yürüyen bakiyesini satır satır izleyebilirsiniz.</li>
+                    <li><strong>Sayfa İçi Fiş Detay Modalı:</strong> Tablodaki fiş numarasına tıkladığınızda sayfadan çıkmadan çift taraflı (Borç = Alacak) yevmiye fişi detaylarını modal pencerede görebilirsiniz.</li>
+                    <li><strong>İsteğe Bağlı Excel (.xlsx) ve Yazdırma:</strong> İhtiyaç duyduğunuzda tek tıkla istemci tarafında saniyeler içinde zengin Excel (.xlsx) dosyası üretebilir veya yazdırma önizlemesi alabilirsiniz.</li>
+                </ul>
+            </section>
+
+            <!-- 11. SİSTEM & AYARLAR (KIRMIZI ALAN) -->
+            <section id="sistem-ayarlar" class="card">
+                <h2>11. Sistem & Ayarlar Merkezi (Kırmızı Alan)</h2>
+                <p>
+                    Sol menünün en altındaki <strong>[Sistem & Ayarlar]</strong> sekmesinden genel parametreleri yönetebilirsiniz:
+                </p>
+
+                <ul>
+                    <li><strong>Kurum / İşletme Kimliği (Profil):</strong> Kurumunuzun ticari unvanını, faaliyet türünü (KOBİ, Şirket, Dernek & Vakıf, Kooperatif, Eğitim & Spor Kulübü vb.) ve varsayılan para birimini (₺, $, €) tek tıkla belirleyebilirsiniz. Üst menü başlığı ve tüm raporlar anında seçtiğiniz kurum kimliğiyle güncellenir.</li>
+                    <li><strong>Personel Türleri:</strong> Kurumunuzdaki departman ve çalışan gruplarını (Beyaz Yaka, Mavi Yaka, Saha vb.) ekleyip yönetebilirsiniz.</li>
+                    <li><strong>Personel Borç Çeşitleri:</strong> Hakediş, prim, mesai veya kesinti türlerini tanımlayabilirsiniz.</li>
+                    <li><strong>Hesap Planı Araçları:</strong> Excel'den toplu içe aktarma araçlarına hızlı erişim sağlar.</li>
+                </ul>
+
+                <div class="callout callout-danger">
+                    <strong>Kırmızı Alan (Veritabanını Sıfırla):</strong>
+                    Test ve deneme kayıtlarından sonra canlıya sıfırdan başlamak istediğinizde, hesap planını koruyarak tüm operasyonel hareketleri siler. Yanlışlıkla basılmayı engellemek için onay kutusuna büyük harflerle <strong>SIFIRLA</strong> yazma şartı mevcuttur.
+                </div>
+            </section>
+
+            <!-- 12. YEDEKLEME & GÜVENLİ ÇIKIŞ -->
+            <section id="yedekleme" class="card">
+                <h2>12. Yedekleme & Güvenli Çıkış</h2>
+                <p>
+                    Tüm finansal verileriniz, fişleriniz ve personel kayıtlarınız program klasörünün içindeki tek bir dosyada saklanır:
+                </p>
+                <pre>oftek\muhasebe.db</pre>
+
+                <h3>Yedek Alma Prosedürü</h3>
+                <ol>
+                    <li>Programı kapatmak için siyah komut penceresini veya tarayıcı sekmesini kapatın.</li>
+                    <li><code>oftek</code> klasörünün içindeki <strong><code>muhasebe.db</code></strong> dosyasını kopyalayın.</li>
+                    <li>Bu kopyayı tarihiyle birlikte (Örn: <code>muhasebe_yedek_2026_03_19.db</code>) güvenli bir harici diske veya bulut deponuza yapıştırın.</li>
+                    <li>Gerektiğinde bu dosyayı tekrar `muhasebe.db` olarak klasöre yapıştırmanız tüm geçmişi eksiksiz geri yükler.</li>
+                </ol>
+
+                <div class="callout callout-warning">
+                    <strong>Flash Belleği Güvenle Çıkarın:</strong> Programı flash bellek üzerinde kullanıyorsanız, diski bilgisayardan çekmeden önce Windows'un sağ alt çubuğundaki <em>"Donanımı Güvenle Kaldır ve Medyayı Çıkar"</em> seçeneğini kullanınız. Bu, SQLite veritabanının yazma işlemlerinin sağlıklı biçimde tamamlanmasını garanti eder.
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- PANOYA KOPYALAMA JAVASCRIPT MOTORU -->
+    <script>
+        function copyToClipboard(text, btn) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => markCopied(btn)).catch(() => fallbackCopy(text, btn));
+            } else {
+                fallbackCopy(text, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                markCopied(btn);
+            } catch (e) {
+                btn.innerText = 'Seçiniz';
+            }
+        }
+
+        function markCopied(btn) {
+            const orig = btn.innerText;
+            btn.innerText = '✓ Kopyalandı!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerText = orig;
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

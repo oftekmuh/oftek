@@ -1,0 +1,29 @@
+/* oftek Genel Stiller & Kaydırma Çubuğu */
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.autocomplete-active {
+    background-color: #f1f5f9 !important;
+}
+
+/* Fiş Tablosu ve Hücre Geçiş Animasyonu */
+.voucher-cell-focus:focus-within {
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 1px #4f46e5 !important;
+}
