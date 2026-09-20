@@ -76,8 +76,10 @@ def init_database():
             tip TEXT NOT NULL,
             kod TEXT UNIQUE,
             unvan TEXT NOT NULL,
+            yetkili TEXT,
             vergi_no TEXT,
             telefon TEXT,
+            hesap_kodu TEXT,
             bakiye REAL DEFAULT 0,
             durum TEXT DEFAULT 'AKTIF'
         );
@@ -245,7 +247,9 @@ def init_database():
         "ALTER TABLE gunluk_islemler ADD COLUMN karsi_hesap TEXT",
         "ALTER TABLE gunluk_islemler ADD COLUMN kategori TEXT",
         "ALTER TABLE personel_tahakkuklari ADD COLUMN fis_id INTEGER",
-        "ALTER TABLE personeller ADD COLUMN personel_turu_kod TEXT DEFAULT 'GENEL'"
+        "ALTER TABLE personeller ADD COLUMN personel_turu_kod TEXT DEFAULT 'GENEL'",
+        "ALTER TABLE cariler ADD COLUMN yetkili TEXT",
+        "ALTER TABLE cariler ADD COLUMN hesap_kodu TEXT"
     ]:
         try:
             cursor.execute(sql)
