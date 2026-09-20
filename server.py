@@ -13,6 +13,13 @@ import webbrowser
 from urllib.parse import urlparse, parse_qs
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 from db_manager import init_database, get_db_connection, DB_PATH, DB_FILENAME
 from api_handlers import handle_api_request
 

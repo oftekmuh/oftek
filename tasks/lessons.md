@@ -67,4 +67,11 @@
   Python web sunucusu (`server.py`) `0.0.0.0:8080` üzerinde tüm ağ arayüzlerini dinler. Program tek bir ana bilgisayarda çalıştırıldığında konsolda yerel IP adresi (`http://192.168.1.X:8080`) yazdırılır. Aynı Wi-Fi veya kablolu ofis ağına bağlı olan tüm cep telefonları, tabletler ve diğer bilgisayarlar hiçbir ek program/sürücü yüklemeden tarayıcı üzerinden sisteme erişebilir. Arayüz tam dokunmatik ve mobil uyumlu (responsive) olduğu için saha, kasa ve depo operasyonları cep telefonundan eş zamanlı yönetilebilir.
 - **Dahili Taşınabilir Python (~20 MB) & Gelişmiş Hata Teşhis ve Geri Bildirim Mekanizması**:
   Kullanıcıların harici Python indirme veya ortam değişkeni (PATH) yapılandırma karmaşasıyla uğraşmaması için ~20 MB boyutundaki taşınabilir gömülü Python motoru (`python/`) doğrudan depoya dahil edilir. `baslat.bat` öncelikle bu dahili motoru çalıştırır. Herhangi bir nedenden ötürü (ZIP'ten çıkarmadan çalıştırma, Defender engeli, taşınma sırasında silinmiş klasör vb.) Python bulunamazsa veya sunucu hata verirse pencere anında kapanmaz (`pause`); kullanıcıya renklendirilmiş net Türkçe hata teşhisi, olası 4 neden, kesin çözüm adımları ve manuel `python.org` kurulum rehberi sunulur. Aynı zamanda `kullanim_kilavuzu.html` (13. Bölüm) ve `README.md` içerisinde ayrıntılı sorun giderme kılavuzu hazır tutulur.
+- **Windows Batch (.bat) Sözdizimi (Syntax) ve Parantez Kuralı**:
+  Windows `cmd.exe`, batch scriptlerindeki `if (...)` bloklarında veya `set VAR=(...)` içinde geçen parantezleri blok kapanışı sanarak sözdizimi hatası (`The syntax of the command is incorrect`) üretir ve pencere `pause` komutuna dahi ulaşamadan milisaniyeler içinde anında kapanır. Bu sebeple:
+  1. `::` yerine daima `REM` kullanılmalıdır (`::` blok içinde ölümcüldür).
+  2. Değişken atamalarında `set "VAR=DEGER"` kalıbı kullanılmalıdır.
+  3. Parantez blokları yerine doğrudan tek satırlı `if exist ... goto ...` tercih edilmelidir.
+  4. Script metinlerinde kaçışsız parantez `(` `)` yerine köşeli parantez `[` `]` tercih edilmelidir.
+
 

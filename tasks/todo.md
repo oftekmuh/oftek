@@ -266,6 +266,13 @@
 - [x] Standartlar & Dersler (`tasks/lessons.md`): Dahili Python ve Gelişmiş Hata Teşhis kuralı kaydedildi
 - [x] Test & Doğrulama: 30/30 testin yeşil geçmesi ve GitHub'a push edilmesi
 
+## Faz 29: baslat.bat Batch Syntax / Parantez Düzeltmesi ve Windows Konsol UTF-8 İyileştirmesi
+- [x] `baslat.bat`: cmd.exe sözdizimi hatası (`The syntax of the command is incorrect`) yaratan parantez ve değişken blokları temizlendi, kurşun geçirmez tek satırlı yapıya geçirildi
+- [x] `server.py`: Windows konsolunda Türkçe karakterlerin bozulmasını önleyen `sys.stdout.reconfigure(encoding="utf-8")` eklendi
+- [x] Doğrulama: `cmd.exe /c baslat.bat` ile arka planda sunucunun sorunsuz ayağa kalktığı ve dinlediği doğrulandı
+- [x] Test & Git: 30/30 test yeşil, anonim kimlikle GitHub'a push edildi
+
+
 
 
 
