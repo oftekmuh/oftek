@@ -495,7 +495,8 @@
                 <li><a href="#raporlar-analiz">10. Mali Raporlar & Canlı Analiz</a></li>
                 <li><a href="#sistem-ayarlar">11. Sistem & Ayarlar (Kırmızı Alan)</a></li>
                 <li><a href="#yedekleme">12. Yedekleme & Güvenli Çıkış</a></li>
-                <li><a href="#hata-cozumleri">13. Olası Hatalar & Sorun Giderme</a></li>
+                <li><a href="#guncelleme">🔄 13. Sürüm Güncelleme & Veri Güvenliği</a></li>
+                <li><a href="#hata-cozumleri">🛠️ 14. Olası Hatalar & Sorun Giderme</a></li>
             </ul>
         </aside>
 
@@ -903,9 +904,65 @@
                 </div>
             </section>
 
-            <!-- 13. OLASI HATALAR & SORUN GİDERME REHBERİ -->
+            <!-- 13. SÜRÜM GÜNCELLEME & VERİ GÜVENLİĞİ REHBERİ -->
+            <section id="guncelleme" class="card">
+                <h2>🔄 13. Sürüm Güncelleme & Veri Güvenliği Rehberi</h2>
+                <p>
+                    oftek'in yeni bir sürümü GitHub'da yayınlandığında, mevcut kayıtlarınızı (kasayı, carileri, borç/alacakları, fişleri ve kullanıcı şifrenizi) <strong>hiç kaybetmeden ve sıfır riskle</strong> sistemi güncellemeniz için iki farklı yöntem sunulmuştur:
+                </p>
+
+                <div class="callout callout-success">
+                    <strong>🛡️ muhasebe.db Nasıl Korunur? (Veri Kaybı Neden İmkansızdır?):</strong><br>
+                    1. <strong>GitHub Deposunda Veritabanı Yoktur:</strong> oftek GitHub deposunda <code>muhasebe.db</code> dosyası yer almaz (<code>.gitignore</code> ile korunur). Bu sayede indirdiğiniz hiçbir güncelleme paketi mevcut veritabanınızın üzerine boş dosya yazamaz.<br>
+                    2. <strong>Otomatik Şema Uyumluluğu (Auto-Migration):</strong> Yeni sürümle birlikte veritabanına yeni bir tablo veya yeni bir sütun eklenmiş olsa dahi, <code>db_manager.py</code> ilk açılışta bunu otomatik algılar; mevcut verilerinize dokunmadan yeni sütun ve tabloları sessizce ekler.
+                </div>
+
+                <h3>YÖNTEM 1: Tek Tıkla Otomatik Güncelleme (<code>guncelle.bat</code> - Tavsiye Edilen)</h3>
+                <p>
+                    Program klasörünüzde yer alan <strong><code>guncelle.bat</code></strong> dosyasına çift tıklayarak tüm güncelleme sürecini tek tıkla otomatikleştirebilirsiniz.
+                </p>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-title">guncelle.bat'a Tıklayın</div>
+                        <div class="step-desc">Açık olan oftek oturumları kapatılır ve otomatik güncelleme sihirbazı başlar.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-title">Atomik Yedek Alınır</div>
+                        <div class="step-desc">Asıl <code>muhasebe.db</code> dosyanız <code>yedekler/</code> klasörüne tarih-saat damgasıyla kopyalanır.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Kodlar Yenilenir</div>
+                        <div class="step-desc">GitHub'dan en güncel sistem kodları indirilir; veritabanı aynen korunarak işlem tamamlanır.</div>
+                    </div>
+                </div>
+
+                <div class="callout callout-info">
+                    <strong>⚡ Yarım Kalma Koruması (İşlem Sırasında Elektrik Kesilirse Ne Olur?):</strong><br>
+                    <code>guncelle.bat</code> çalışırken elektrik kesilse, internet kopsa veya pencereyi kazaen kapatsanız dahi <strong>asıl <code>muhasebe.db</code> dosyanız ASLA bozulmaz!</strong> Çünkü script asıl veritabanını asla silmez veya taşımaz; salt okunur kopyalama yapar ve dosya bütünlüğünü doğrulamadan işlem yapmaz.
+                </div>
+
+                <h3>YÖNTEM 2: Manuel ZIP İndirerek Güncelleme</h3>
+                <p>
+                    Eğer güncellemeyi manuel olarak yapmak isterseniz aşağıdaki iki yoldan birini tercih edebilirsiniz:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Seçenek A (Mevcut Klasörün Üzerine Yazma - En Kolay Manuel Yol):</strong><br>
+                        GitHub'dan (<a href="https://github.com/oftekmuh/oftek" target="_blank" style="color:var(--primary); font-weight:bold;">github.com/oftekmuh/oftek</a>) en güncel <code>oftek-main.zip</code> dosyasını indirin. Zip içindeki tüm dosyaları mevcut <code>oftek</code> klasörünüzün içine sürükleyip Windows'un sorduğu <em>"Hedefteki dosyaları değiştir" (Overwrite)</em> butonuna basın. Zip içinde <code>muhasebe.db</code> bulunmadığı için veritabanınız aynen korunur, kodlar güncellenir.
+                    </li>
+                    <li style="margin-top: 0.5rem;">
+                        <strong>Seçenek B (Yeni Klasöre Taşıma):</strong><br>
+                        Yeni sürümü sıfırdan başka bir klasöre veya yeni bir flash belleğe zipten çıkardıysanız; eski klasörünüzdeki <strong><code>muhasebe.db</code></strong> dosyasını kopyalayıp yeni klasörün içine yapıştırmanız yeterlidir. <code>baslat.bat</code>'a bastığınızda tüm geçmişiniz ve verileriniz yeni sistemde anında açılır.
+                    </li>
+                </ul>
+            </section>
+
+            <!-- 14. OLASI HATALAR & SORUN GİDERME REHBERİ -->
             <section id="hata-cozumleri" class="card">
-                <h2>🛠️ 13. Olası Hatalar, Python Kurulumu ve Sorun Giderme Rehberi</h2>
+                <h2>🛠️ 14. Olası Hatalar, Python Kurulumu ve Sorun Giderme Rehberi</h2>
                 <p>
                     oftek, kullanıcıların teknik kurulumlarla vakit kaybetmemesi için içerisinde hazır taşınabilir Python motoruyla (<code>python/</code>) dağıtılır. Ancak farklı Windows yapılandırmalarında veya taşınabilir ortamlarda karşılaşabileceğiniz olası durumlar ve kesin çözümleri aşağıda listelenmiştir:
                 </p>

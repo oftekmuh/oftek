@@ -30,6 +30,8 @@ muhasebe.db
 *.db
 *.sqlite
 *.sqlite3
+yedekler/
+_update_temp/
 *.sqlite3-journal
 *.db-journal
 

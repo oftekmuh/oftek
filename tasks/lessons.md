@@ -86,6 +86,13 @@
 - **Hardcoded Tohum Veriler ve Dinamik Mali Yıl Standardı**:
   1. **Tohum Veriler (`db_seed.py`):** Sistemde hiçbir şirkete, bankaya veya kuruluşa özel ('Ziraat Bankası', 'Merkez TL Kasası', 'Yurtiçi Tedarikçiler' vb.) alt hesap kodları tohum verilerde tutulmamalıdır. Yalnızca Seviye 1 genel ana hesaplar (`100`, `102`, `120`, `320`, `770` vb.) başlangıç standardı olarak sunulmalı; tüm alt hesaplar kullanıcı veya kurum tarafından arayüzden veya Excel'den dinamik olarak tanımlanmalıdır.
   2. **Dinamik Mali Yıl & Tarih Yönetimi:** Frontend veya backend kodlarında `2026` gibi sabit mali yıllar hardcoded olarak yazılmamalıdır. Sistem o anki yılı `new Date().getFullYear()` ve `(currentYear - 1)` üzerinden dinamik olarak hesaplamalı, Header, Personel Tahakkuk ve Raporlar ekranındaki yıl butonları bu dinamik yıla göre çizilmeli ve seçilmelidir. Modal placeholder'ları (`ALM-001`, `SAT-001`) genel şablonlarda tutulmalıdır.
+- **Atomik Yedekleme & Güvenli Güncelleme Standardı (`guncelle.bat`)**:
+  1. `muhasebe.db` dosyası güncelleme sırasında ASLA taşınmamalı (`move`) veya silinmemelidir (`del`). Yalnızca salt-okunur olarak kopyalanmalıdır (`copy /y`).
+  2. Kopyalama işlemi önce geçici bir dosyaya (`yedekler\_gecici_yedek.tmp`) yapılmalı, kopyalama boyutu > 0 olduğu doğrulandıktan sonra tarih-saat damgalı kalıcı yedeğe dönüştürülmelidir. Bu sayede elektrik kesintisi veya kullanıcının pencereyi aniden kapatması durumunda asıl veritabanı dosyasının zarar görmesi teknik olarak imkansızdır.
+  3. GitHub deposunda ve dağıtım paketlerinde `muhasebe.db` asla bulunmamalıdır (`.gitignore`).
+  4. Güncelleme scripti (`guncelle.bat`), çalışan eski sunucu süreçlerini önce kapatmalı, ardından `.git` varsa `git pull`, yoksa GitHub ZIP paketini geçici dizine indirip `muhasebe.db` hariç ana dizine aktarmalıdır.
+  5. `db_manager.py` her açılışta `CREATE TABLE IF NOT EXISTS` ve `ALTER TABLE ... ADD COLUMN` ile geriye dönük uyumlu şema migrasyonunu otomatik tamamlamalıdır.
+
 
 
 

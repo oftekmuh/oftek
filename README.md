@@ -101,6 +101,11 @@ Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
 3. Mobil cihazınızın tarayıcısına (Safari, Chrome vb.) konsolda yazan IP adresini (Örn: `http://192.168.1.45:8080`) yazıp Enter'a basın.
 4. oftek'in dokunmatik ve tam uyumlu mobil arayüzü karşınıza gelecektir; sahada veya dükkanda kasayı telefonunuzdan yönetebilirsiniz.
 
+### 🔄 Güvenli Güncelleme (Veritabanı Silinmeden Nasıl Güncellenir?)
+Yeni bir sürüm yayınlandığında `muhasebe.db` veritabanınızı **hiç kaybetmeden ve sıfır riskle** güncellemek için iki yöntem mevcuttur:
+- **Yöntem 1 (Tek Tıkla Otomatik - Tavsiye Edilen):** `guncelle.bat` dosyasına çift tıklayın. Script önce asıl `muhasebe.db` dosyanızı `yedekler/` klasörüne atomik olarak yedekler (yarım kalma korumalı), ardından en güncel kodları çeker. Asıl veritabanınıza asla dokunulmaz.
+- **Yöntem 2 (Manuel ZIP):** GitHub'dan indirilen `oftek-main.zip` içindeki dosyaları mevcut klasöre sürükleyip *"Hedefteki dosyaları değiştir"* deyin. Depoda `muhasebe.db` bulunmadığı için veritabanınız aynen korunur.
+
 ### 🛠️ Olası Hatalar ve Hızlı Çözümler (Sorun Giderme)
 - **`baslat.bat` açılıp hemen kapanıyor veya "Python bulunamadı" diyor:**
   - *Sebep:* Dosyaları ZIP arşivinden çıkarmadan doğrudan zip içinde çalıştırmış olabilirsiniz. Windows zip içini geçici bellekte açar ve `python` klasörünü göremez.
@@ -110,7 +115,7 @@ Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
   - *Çözüm:* `Ctrl+Shift+Esc` ile Görev Yöneticisi'ni açıp arka plandaki `python.exe` sürecini sonlandırın veya bilgisayarı yeniden başlatın.
 - **Telefondan bağlanılamıyor:**
   - *Çözüm:* Telefonun mobil verisini (4.5G) kapatıp bilgisayarla aynı Wi-Fi ağına bağlandığından ve Windows Güvenlik Duvarı'nda "Özel Ağlara İzin Ver" seçildiğinden emin olun.
-- Daha ayrıntılı hata senaryoları için **[`kullanim_kilavuzu.html`](kullanim_kilavuzu.html)** sayfasındaki 13. Bölümü inceleyebilirsiniz.
+- Daha ayrıntılı hata senaryoları ve güncelleme rehberi için **[`kullanim_kilavuzu.html`](kullanim_kilavuzu.html)** sayfasındaki 13. ve 14. Bölümleri inceleyebilirsiniz.
 
 ---
 
@@ -143,6 +148,7 @@ oftek/
 ├── app.py                      # Ana başlatıcı (sys.path ve otomatik tarayıcı açıcı)
 ├── server.py                   # Yerel HTTP sunucusu, Auth Guard ve REST yönlendirici
 ├── baslat.bat                  # Taşınabilir akıllı Windows başlatıcı (ayrıntılı teşhis & geri bildirim)
+├── guncelle.bat                # Atomik yedeklemeli güvenli otomatik sistem güncelleyici
 ├── python/                     # Windows için dahili gömülü Python 3.11 motoru (~20 MB)
 ├── db_manager.py               # SQLite bağlantı, şema ve indeks yöneticisi (< 300 satır)
 ├── db_seed.py                  # Standart hesap planı ve tohum veriler (< 300 satır)

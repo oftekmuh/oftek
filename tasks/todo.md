@@ -289,6 +289,14 @@
 - [x] Testlerin Doğrulanması: 35/35 birim ve entegrasyon testinin yeşil geçmesi
 - [x] Git & GitHub: Değişikliklerin anonim yazarla commit ve push edilmesi
 
+## Faz 32: Güvenli Güncelleme Sistemi (guncelle.bat) & Kılavuz Entegrasyonu
+- [x] `guncelle.bat`: Atomik ve yarım kalmalara karşı kurşun geçirmez veritabanı yedeklemesi yapan, git pull veya GitHub ZIP ile muhasebe.db'ye dokunmadan tek tıkla güncelleyen batch scripti
+- [x] `kullanim_kilavuzu.html`: Her iki güncelleme yöntemini (guncelle.bat ve Manuel ZIP) ile veritabanı güvenlik mekanizmasını ayrıntılı anlatan yeni bölüm ve menü linki
+- [x] `README.md`: Tek tıkla güncelleme ve veri koruma talimatlarının eklenmesi
+- [x] `tasks/lessons.md`: Atomik yedekleme ve güncelleme emniyeti kurallarının işlenmesi
+- [x] Test & Doğrulama: 35/35 testin eksiksiz yeşil geçmesi, anonim yazarla commit ve GitHub push
+
+
 
 
 
