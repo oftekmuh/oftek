@@ -93,8 +93,9 @@
   4. Güncelleme scripti (`guncelle.bat`), çalışan eski sunucu süreçlerini önce kapatmalı, ardından `.git` varsa `git pull`, yoksa GitHub ZIP paketini geçici dizine indirip `muhasebe.db` hariç ana dizine aktarmalıdır.
   5. `db_manager.py` her açılışta `CREATE TABLE IF NOT EXISTS` ve `ALTER TABLE ... ADD COLUMN` ile geriye dönük uyumlu şema migrasyonunu otomatik tamamlamalıdır.
 
-
-
-
-
-
+- **Dinamik Hesap Kodu Çözümleme (`_resolve_account`) ve Alt Hesap Fallback Standardı**:
+  Yevmiye fişi motoru (`accounting_voucher.py`) ve tahakkuk modülü (`handlers_accruals.py`) asla hardcoded alt hesap kodlarına (`770.01`, `335.01`, `153.01`, `600.20` vb.) mutlak bağımlı olmamalıdır. Sistem `_resolve_account(cursor, candidates)` mekanizması ile önce istenen alt hesabı kontrol etmeli; bulunamazsa otomatik olarak ana hesaba (`770`, `335`, `153`, `600`, `120`, `100` vb.) fallback yapmalıdır. Bu sayede tohum verilerden alt hesaplar temizlendiğinde veya kullanıcı kendi alt hesap planını açtığında hiçbir veritabanı kısıtı veya foreign key hatası oluşmaz.
+- **GitHub Branches Anonimliği ve Bot Mühürleme (Bot Delivery) Standardı**:
+  GitHub `/branches` sekmesi, commit yazarını değil son `push` işlemini yapan kullanıcıyı ("Updated by X") gösterir. Kişisel GitHub hesap adının (`hasakguldev`) bu sekmede görünmesini engellemek için CI/CD iş akışına (`.github/workflows/ci.yml`) testler geçtikten sonra çalışan bir `bot-seal` adımı eklenir. `github-actions[bot]` yetkili GITHUB_TOKEN ile boş bir mühür commit'i (`[skip ci]`) push eder; böylece GitHub branches sayfasında daldaki son güncelleme daima `Updated by github-actions[bot]` olarak mühürlenir.
+- **Windows Batch Dosyalarında CRLF Satır Sonu Zorunluluğu**:
+  Windows `cmd.exe` yorumlayıcısı, yalnızca LF (`\n`) ile kaydedilmiş `.bat` dosyalarında satır başındaki ilk karakterleri yutabilir. Windows için hazırlanan tüm `.bat` dosyaları daima CRLF (`\r\n`) formatında kaydedilmelidir.

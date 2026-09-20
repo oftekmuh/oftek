@@ -154,8 +154,8 @@ class TestApiIntegration(unittest.TestCase):
             "tip": "MAHSUP",
             "aciklama": "Dengesiz Fiş",
             "rows": [
-                {"hesap_kod": "770.02", "borc": 1000.0, "alacak": 0.0},
-                {"hesap_kod": "100.01", "borc": 0.0, "alacak": 900.0}
+                {"hesap_kod": "770", "borc": 1000.0, "alacak": 0.0},
+                {"hesap_kod": "100", "borc": 0.0, "alacak": 900.0}
             ]
         })
         self.assertEqual(unbal_stat, 400)
@@ -168,7 +168,7 @@ class TestApiIntegration(unittest.TestCase):
             "tip": "MAHSUP",
             "rows": [
                 {"hesap_kod": "999.99", "borc": 500.0, "alacak": 0.0},
-                {"hesap_kod": "100.01", "borc": 0.0, "alacak": 500.0}
+                {"hesap_kod": "100", "borc": 0.0, "alacak": 500.0}
             ]
         })
         self.assertEqual(inv_stat, 400)
@@ -180,9 +180,9 @@ class TestApiIntegration(unittest.TestCase):
             "tip": "MAHSUP",
             "aciklama": "Ofis Malzemesi ve Kırtasiye Alımı",
             "rows": [
-                {"hesap_kod": "770.02", "aciklama": "Kırtasiye Bedeli", "borc": 600.0, "alacak": 0.0},
-                {"hesap_kod": "191.20", "aciklama": "%20 KDV", "borc": 120.0, "alacak": 0.0},
-                {"hesap_kod": "100.01", "aciklama": "Kasa Nakit Ödeme", "borc": 0.0, "alacak": 720.0}
+                {"hesap_kod": "770", "aciklama": "Kırtasiye Bedeli", "borc": 600.0, "alacak": 0.0},
+                {"hesap_kod": "191", "aciklama": "%20 KDV", "borc": 120.0, "alacak": 0.0},
+                {"hesap_kod": "100", "aciklama": "Kasa Nakit Ödeme", "borc": 0.0, "alacak": 720.0}
             ]
         })
         self.assertEqual(valid_stat, 201)

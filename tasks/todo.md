@@ -295,11 +295,11 @@
 - [x] `README.md`: Tek tıkla güncelleme ve veri koruma talimatlarının eklenmesi
 - [x] `tasks/lessons.md`: Atomik yedekleme ve güncelleme emniyeti kurallarının işlenmesi
 - [x] Test & Doğrulama: 35/35 testin eksiksiz yeşil geçmesi, anonim yazarla commit ve GitHub push
-
-
-
-
-
+## Faz 33: Dinamik Hesap Çözümleme, CI Test Düzeltmesi, Actions Temizliği ve Bot Mühürleme
+- [x] Backend Dinamik Hesap Çözümleyici (`_resolve_account`): `accounting_voucher.py` ve `handlers_accruals.py` dosyalarında alt hesap bulunamadığında otomatik olarak seviye 1 ana hesaba (ör. `770.01` -> `770`, `335.01` -> `335`, `120.01` -> `120`) fallback yapan akıllı mekanizma kuruldu
+- [x] Test Paketi Entegrasyonu: `tests/test_api_integration.py` dosyasındaki manuel fiş testlerinde hesap planında mevcut ana hesaplar (`770`, `191`, `100`) kullanılarak sıfır veritabanı simülasyonunda 35/35 test yeşile çekildi
+- [x] GitHub Actions Koşu Temizliği: GitHub API / gh CLI kullanılarak tüm eski/başarısız Actions koşuları silindi
+- [x] Anonim CI & Bot Mühürleme (`.github/workflows/ci.yml`): Çoklu platform (Ubuntu/Windows - Python 3.11/3.12) test koşusu ve başarı sonrasında `github-actions[bot]` kimliğiyle dalı mühürleyen ve `/branches` sekmesinde `Updated by github-actions[bot]` görünmesini sağlayan modern CI/CD iş akışı kuruldu
 
 
 

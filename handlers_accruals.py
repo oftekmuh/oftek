@@ -3,6 +3,7 @@ Personel Tahakkuk Fişi, Borç Çeşitleri ve Raporlama API Modülü (handlers_a
 """
 
 from db_manager import get_db_connection
+from accounting_voucher import _resolve_account
 
 
 def handle_accrual_routes(method, path, query, body):
@@ -114,17 +115,19 @@ def handle_accrual_routes(method, path, query, body):
             """, (fis_no, tarih, aciklama))
             fis_id = cur.lastrowid
 
-            # Borç: 770.01 Personel Ücret ve Giderleri
+            # Borç: 770 Personel Ücret ve Giderleri (Varsa 770.01)
+            borc_kod = _resolve_account(cur, ["770.01", "770"])
             cur.execute("""
                 INSERT INTO fis_satirlari (fis_id, satir_no, hesap_kod, aciklama, borc, alacak)
-                VALUES (?, 1, '770.01', ?, ?, 0)
-            """, (fis_id, aciklama, toplam_tutar))
+                VALUES (?, 1, ?, ?, ?, 0)
+            """, (fis_id, borc_kod, aciklama, toplam_tutar))
 
-            # Alacak: 335.01 Personele Borçlar
+            # Alacak: 335 Personele Borçlar (Varsa 335.01)
+            alacak_kod = _resolve_account(cur, ["335.01", "335"])
             cur.execute("""
                 INSERT INTO fis_satirlari (fis_id, satir_no, hesap_kod, aciklama, borc, alacak)
-                VALUES (?, 2, '335.01', ?, 0, ?)
-            """, (fis_id, aciklama, toplam_tutar))
+                VALUES (?, 2, ?, ?, 0, ?)
+            """, (fis_id, alacak_kod, aciklama, toplam_tutar))
 
             # Personel Tahakkuk Satırlarını Kaydet
             cur.execute("SELECT id FROM gun_oturumlar WHERE durum = 'ACIK' ORDER BY id DESC LIMIT 1")

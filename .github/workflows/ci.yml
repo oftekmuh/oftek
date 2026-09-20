@@ -1,0 +1,53 @@
+name: OFTEK CI / Guvenlik ve Kalite Dogrulama
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Birim ve Entegrasyon Testleri (${{ matrix.os }} - Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        python-version: [ '3.11', '3.12' ]
+
+    steps:
+      - name: Depoyu Klonla (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Python ${{ matrix.python-version }} Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Testleri Calistir (Sifir Dis Bagimlilik)
+        run: |
+          python -m unittest discover tests
+
+  bot-seal:
+    name: Bot Muhurleme ve Branch Senkronizasyonu
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]') && github.actor != 'github-actions[bot]'
+    steps:
+      - name: Depoyu Klonla (Tum Gecmis)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Bot Kimligi ile Muhur Commit'i Olustur ve Push Et
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "ci(seal): [github-actions[bot]] Test paketi basariyla dogrulandi [skip ci]"
+          git push origin main

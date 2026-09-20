@@ -4,6 +4,36 @@ Gün sonu kapanışında tüm operasyonları tarar ve çift taraflı yevmiye fi�
 """
 
 
+def _resolve_account(cursor, candidates):
+    """
+    Verilen hesap kodu adaylarını sırasıyla hesap planında arar.
+    Noktalı alt hesap bulunamazsa ana hesabına (ör. '770.01' -> '770') fallback yapar.
+    Hesap planında eşleşen ilk geçerli hesap kodunu döndürür.
+    """
+    if isinstance(candidates, str):
+        candidates = [candidates]
+
+    for candidate in candidates:
+        if not candidate:
+            continue
+        c = str(candidate).strip()
+        # 1. Tam kod eşleşmesi
+        cursor.execute("SELECT kod FROM hesap_plani WHERE kod = ?", (c,))
+        row = cursor.fetchone()
+        if row:
+            return row["kod"] if isinstance(row, dict) else row[0]
+
+        # 2. Alt hesap ise ana hesap fallback (ör: 770.01 -> 770)
+        if "." in c:
+            main_code = c.split(".")[0]
+            cursor.execute("SELECT kod FROM hesap_plani WHERE kod = ?", (main_code,))
+            row = cursor.fetchone()
+            if row:
+                return row["kod"] if isinstance(row, dict) else row[0]
+
+    return candidates[-1] if candidates else "100"
+
+
 def close_day_and_generate_voucher(conn, gun_id):
     """
     Günü kapatır, o güne ait tüm operasyonları tek ve dengeli bir yevmiye fişine dönüştürür.
@@ -30,8 +60,8 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE i.gun_id = ? AND i.islem_turu = 'ALACAK_TAHSILAT'
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "120.01"
-        kasa_hesap = r["kaynak_hesap"] or "100.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "120.01", "120"])
+        kasa_hesap = _resolve_account(cursor, [r["kaynak_hesap"], "100.01", "100"])
         aciklama = f"Tahsilat: {r['unvan']} ({r['aciklama'] or 'Cari Tahsilat'})"
         voucher_rows.append({"hesap": kasa_hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
@@ -44,8 +74,8 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE i.gun_id = ? AND i.islem_turu = 'BORC_ODEME'
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "320.01"
-        kasa_hesap = r["kaynak_hesap"] or "100.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "320.01", "320"])
+        kasa_hesap = _resolve_account(cursor, [r["kaynak_hesap"], "100.01", "100"])
         aciklama = f"Ödeme: {r['unvan']} ({r['aciklama'] or 'Tedarikçi Ödemesi'})"
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": kasa_hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
@@ -58,8 +88,8 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE i.gun_id = ? AND i.islem_turu = 'PERSONEL_ODEME'
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "335.01"
-        kasa_hesap = r["kaynak_hesap"] or "100.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "335.01", "335"])
+        kasa_hesap = _resolve_account(cursor, [r["kaynak_hesap"], "100.01", "100"])
         aciklama = f"Personel Ödemesi: {r['ad_soyad']} ({r['aciklama'] or 'Maaş/Avans'})"
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": kasa_hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
@@ -72,9 +102,10 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE t.gun_id = ?
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "335.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "335.01", "335"])
+        gider_hesap = _resolve_account(cursor, ["770.01", "770"])
         aciklama = f"Personel Hakediş Tahakkuku: {r['ad_soyad']} [{r['tur']}] ({r['aciklama'] or ''})"
-        voucher_rows.append({"hesap": "770.01", "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
+        voucher_rows.append({"hesap": gider_hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
 
     # 5. Yeni Satış / Alacak Tahakkukları: 120 Borç, 600 Alacak
@@ -85,10 +116,11 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE a.gun_id = ?
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "120.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "120.01", "120"])
+        gelir_hesap = _resolve_account(cursor, ["600.20", "600"])
         aciklama = f"Satış/Alacak Tahakkuku: {r['unvan']} [{r['kategori']}] Belge: {r['belge_no'] or '-'}"
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": float(r["toplam_tutar"]), "alacak": 0.0})
-        voucher_rows.append({"hesap": "600.20", "aciklama": aciklama, "borc": 0.0, "alacak": float(r["toplam_tutar"])})
+        voucher_rows.append({"hesap": gelir_hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["toplam_tutar"])})
 
     # 6. Yeni Alım / Borç Tahakkukları: 153 Borç, 320 Alacak
     cursor.execute("""
@@ -98,9 +130,10 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE b.gun_id = ?
     """, (gun_id,))
     for r in cursor.fetchall():
-        hesap = r["hesap_kodu"] or "320.01"
+        hesap = _resolve_account(cursor, [r["hesap_kodu"], "320.01", "320"])
+        stok_hesap = _resolve_account(cursor, ["153.01", "153"])
         aciklama = f"Alım/Borç Tahakkuku: {r['unvan']} Belge: {r['belge_no'] or '-'}"
-        voucher_rows.append({"hesap": "153.01", "aciklama": aciklama, "borc": float(r["toplam_tutar"]), "alacak": 0.0})
+        voucher_rows.append({"hesap": stok_hesap, "aciklama": aciklama, "borc": float(r["toplam_tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["toplam_tutar"])})
 
     # 7. Normal Giderler: Gider Hesabı (770 vb.) Borç, Kasa/Banka (100/102) Alacak
@@ -110,8 +143,8 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE gun_id = ? AND islem_turu = 'NORMAL_GIDER'
     """, (gun_id,))
     for r in cursor.fetchall():
-        gider_hesap = r["karsi_hesap"] or "770.01"
-        kasa_hesap = r["kaynak_hesap"] or "100.01"
+        gider_hesap = _resolve_account(cursor, [r["karsi_hesap"], "770.01", "770"])
+        kasa_hesap = _resolve_account(cursor, [r["kaynak_hesap"], "100.01", "100"])
         aciklama = f"Gider [{r['kategori'] or 'Genel'}]: {r['aciklama'] or 'Nakit/Banka Gideri'}"
         voucher_rows.append({"hesap": gider_hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": kasa_hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
@@ -123,8 +156,8 @@ def close_day_and_generate_voucher(conn, gun_id):
         WHERE gun_id = ? AND islem_turu = 'NORMAL_GELIR'
     """, (gun_id,))
     for r in cursor.fetchall():
-        kasa_hesap = r["kaynak_hesap"] or "100.01"
-        gelir_hesap = r["karsi_hesap"] or "600.20"
+        kasa_hesap = _resolve_account(cursor, [r["kaynak_hesap"], "100.01", "100"])
+        gelir_hesap = _resolve_account(cursor, [r["karsi_hesap"], "600.20", "600"])
         aciklama = f"Gelir [{r['kategori'] or 'Genel'}]: {r['aciklama'] or 'Nakit/Banka Geliri'}"
         voucher_rows.append({"hesap": kasa_hesap, "aciklama": aciklama, "borc": float(r["tutar"]), "alacak": 0.0})
         voucher_rows.append({"hesap": gelir_hesap, "aciklama": aciklama, "borc": 0.0, "alacak": float(r["tutar"])})
