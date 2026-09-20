@@ -81,6 +81,9 @@
   Web sunucusu (`server.py`), `.db`, `.sqlite`, `.py`, `.bat`, `.env` uzantılı dosyalara yönelik doğrudan statik web isteklerini kesinlikle engellemeli ve `403 Forbidden` yanıtı vermelidir. Böylece yerel ağdaki hiçbir istemci `http://IP:8080/muhasebe.db` yazarak veritabanı dosyasını indiremez.
 - **Parametreli SQL & SQL Injection Bağışıklığı**:
   Tüm veritabanı sorguları SQLite parametreli (`?`) bağlama yöntemiyle çalıştırılmalı; dinamik string birleştirmeyle SQL oluşturulması kesinlikle yasaklanmalıdır.
+- **JavaScript Global Scope ve Mükerrer `let`/`const` Bildirimi Yasağı**:
+  Modüler JS mimarisinde farklı script dosyalarında aynı isimli global değişken `let` veya `const` ile tekrar tanımlanmamalıdır. Mükerrer bildirim `SyntaxError: Identifier '...' has already been declared` hatası üreterek o dosyanın (`app.js`) çalışmasını derhal durdurur; `switchTab`, `setPeriodYear` gibi temel fonksiyonlar tanımsız kalır ve sayfa "Kontrol ediliyor..." durumunda asılı kalır. Ortak global değişkenler (`activeTab`, `currentPeriodYear` vb.) sadece tek bir temel dosyada (`api.js`) tanımlanmalı, diğer dosyalarda doğrudan kullanılmalıdır.
+
 
 
 

@@ -2,8 +2,7 @@
  * oftek - Ana Uygulama Yönlendiricisi, Tab Navigasyonu & Başlatıcı
  */
 
-let currentPeriodYear = '2026';
-let currentPeriodMonth = ''; // Global ay kısıtı kaldırıldı, işlemler tarihe ve seçilen döneme göre çalışır
+// Not: activeTab, currentPeriodYear ve currentPeriodMonth api.js içinde tanımlanmıştır.
 
 function switchTab(tabId) {
     activeTab = tabId;
