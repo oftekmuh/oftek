@@ -258,5 +258,14 @@
 - [x] Standartlar & Dersler (`tasks/lessons.md`): Yerel Ağ ve Çoklu Cihaz Girişi kuralı kaydedildi
 - [x] Git & Depo Senkronizasyonu: Değişiklikler anonim kimlikle GitHub (`oftekmuh/oftek`) deposuna push edildi
 
+## Faz 28: Dahili Python (~20 MB) Depo Entegrasyonu ve Gelişmiş Hata Teşhis Mekanizması
+- [x] .gitignore Güncellemesi: `python/` klasörü dışlaması kaldırılarak gömülü Python motoru git takibine dahil edildi
+- [x] `baslat.bat` Hata Teşhis & Geri Bildirim: Python bulunamadığında veya sunucu çöktüğünde kapanmayan (pause), renkli Türkçe teşhis, olası 4 neden ve net çözüm adımları sunan akıllı başlatıcı
+- [x] Dokümantasyon (`kullanim_kilavuzu.html`): Sol menüye ve 13. Bölüme "🛠️ Olası Hatalar, Python Kurulumu ve Sorun Giderme Rehberi" (ZIP uyarısı, Defender, manuel Python kurma, port çakışması, mobil Wi-Fi) eklendi
+- [x] Dokümantasyon (`README.md`): Dahili Python vurgusu, resmi python.org manuel kurulum adımları ve hızlı sorun giderme maddeleri eklendi
+- [x] Standartlar & Dersler (`tasks/lessons.md`): Dahili Python ve Gelişmiş Hata Teşhis kuralı kaydedildi
+- [x] Test & Doğrulama: 30/30 testin yeşil geçmesi ve GitHub'a push edilmesi
+
+
 
 

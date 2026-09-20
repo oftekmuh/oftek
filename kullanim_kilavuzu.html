@@ -494,6 +494,7 @@
                 <li><a href="#raporlar-analiz">10. Mali Raporlar & Canlı Analiz</a></li>
                 <li><a href="#sistem-ayarlar">11. Sistem & Ayarlar (Kırmızı Alan)</a></li>
                 <li><a href="#yedekleme">12. Yedekleme & Güvenli Çıkış</a></li>
+                <li><a href="#hata-cozumleri">13. Olası Hatalar & Sorun Giderme</a></li>
             </ul>
         </aside>
 
@@ -525,7 +526,7 @@
                 </div>
 
                 <div class="callout callout-success">
-                    <strong>Kurulum Gerektirmez:</strong> Program, içerisindeki dahili gömülü Python motoruyla birlikte gelir. Bilgisayara Python veya harici hiçbir paket yüklemeniz gerekmez.
+                    <strong>Kurulum Gerektirmez (Dahili Python 3.11 Dahildir):</strong> oftek, proje klasörü içindeki hazır taşınabilir <code>python/</code> motoruyla birlikte gelir. Bilgisayarınıza Python veya harici hiçbir kütüphane kurmanız gerekmez. Çift tıklayarak anında çalıştırabilirsiniz.
                 </div>
 
                 <h3>Sistemi Başlatma Adımları</h3>
@@ -838,6 +839,70 @@
                 <div class="callout callout-warning">
                     <strong>Flash Belleği Güvenle Çıkarın:</strong> Programı flash bellek üzerinde kullanıyorsanız, diski bilgisayardan çekmeden önce Windows'un sağ alt çubuğundaki <em>"Donanımı Güvenle Kaldır ve Medyayı Çıkar"</em> seçeneğini kullanınız. Bu, SQLite veritabanının yazma işlemlerinin sağlıklı biçimde tamamlanmasını garanti eder.
                 </div>
+            </section>
+
+            <!-- 13. OLASI HATALAR & SORUN GİDERME REHBERİ -->
+            <section id="hata-cozumleri" class="card">
+                <h2>🛠️ 13. Olası Hatalar, Python Kurulumu ve Sorun Giderme Rehberi</h2>
+                <p>
+                    oftek, kullanıcıların teknik kurulumlarla vakit kaybetmemesi için içerisinde hazır taşınabilir Python motoruyla (<code>python/</code>) dağıtılır. Ancak farklı Windows yapılandırmalarında veya taşınabilir ortamlarda karşılaşabileceğiniz olası durumlar ve kesin çözümleri aşağıda listelenmiştir:
+                </p>
+
+                <h3>Senaryo 1: <code>baslat.bat</code> Açılıp Hemen Kapanıyor veya "Python Bulunamadı" Uyarısı Veriyor</h3>
+                <div class="callout callout-danger" style="margin-top: 0.5rem;">
+                    <strong>En Sık Neden 1: Dosyaları ZIP Arşivinden Çıkarmadan Çalıştırmak</strong><br>
+                    Eğer projeyi <code>.zip</code> dosyası olarak indirdiyseniz ve zip penceresinin içindeyken <code>baslat.bat</code>'a tıkladıysanız, Windows tüm dosyaları geçici (Temp) sanal bir klasörde açar ve yanındaki <code>python</code> klasörüne erişemez.<br>
+                    <strong>Kesin Çözüm:</strong> <code>.zip</code> arşivine sağ tıklayın, <strong>"Tümünü Ayıkla..."</strong> (veya <em>Klasöre Çıkar</em>) seçeneğine tıklayın. Çıkarılan gerçek klasöre girip <code>baslat.bat</code> dosyasını öyle çalıştırın.
+                </div>
+
+                <div class="callout callout-warning" style="margin-top: 0.5rem;">
+                    <strong>Neden 2: "python" Klasörünün Eksik Taşınması veya Silinmesi</strong><br>
+                    Programı USB belleğe veya başka bir bilgisayara kopyalarken <code>python</code> klasörü taşınmamış veya yanlışlıkla silinmiş olabilir.<br>
+                    <strong>Çözüm:</strong> Program dizininde <code>python\python.exe</code> dosyasının var olduğunu teyit edin. Eksikse projeyi GitHub deposundan (<a href="https://github.com/oftekmuh/oftek" target="_blank" style="color:var(--primary); font-weight:bold;">github.com/oftekmuh/oftek</a>) eksiksiz olarak tekrar indirin.
+                </div>
+
+                <div class="callout callout-info" style="margin-top: 0.5rem;">
+                    <strong>Neden 3: Windows SmartScreen / Defender Engeli</strong><br>
+                    Windows bazen internetten indirilen <code>.bat</code> veya <code>.exe</code> dosyaları için "Windows bilgisayarınızı korudu" mavi uyarı penceresi gösterebilir.<br>
+                    <strong>Çözüm:</strong> Penceredeki <strong>"Ek Bilgi"</strong> (More info) linkine tıklayın ve ardından çıkan <strong>"Yine de çalıştır"</strong> butonuna basın.
+                </div>
+
+                <h3>Senaryo 2: Kendi Bilgisayarınıza Python Kurmak İsterseniz (Alternatif / Kalıcı Çözüm)</h3>
+                <p>
+                    Dahili gömülü Python yerine bilgisayarınızın işletim sistemine doğrudan genel Python kurmak isterseniz aşağıdaki 4 adımı takip edebilirsiniz. <code>baslat.bat</code> sistemde kurulu Python'ı otomatik olarak algılar:
+                </p>
+                <div class="step-grid">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <div class="step-title">İndirin</div>
+                        <div class="step-desc">Resmi <a href="https://www.python.org/downloads/" target="_blank" style="color:var(--primary); font-weight:bold;">python.org/downloads</a> adresinden en güncel Python 3.10+ sürümünü indirin.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <div class="step-title">PATH'i İşaretleyin!</div>
+                        <div class="step-desc">Kurulum ekranının en altında yer alan <strong>"Add Python to PATH"</strong> (Python'ı PATH'e ekle) kutusunu <strong>MUTLAKA İŞARETLEYİN!</strong></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <div class="step-title">Kurulumu Tamamlayın</div>
+                        <div class="step-desc">"Install Now" butonuna basarak kurulumu bitirin. Harici hiçbir kütüphane (pip) kurmanıza gerek yoktur.</div>
+                    </div>
+                </div>
+
+                <h3>Senaryo 3: "Port 8080 Kullanımda" veya Web Arayüzü Açılmıyor</h3>
+                <p>
+                    Eğer sunucu başlarken hata veriyorsa, bilgisayarınızda daha önceden açık kalmış bir oftek oturumu veya başka bir yerel geliştirme yazılımı 8080 portunu meşgul ediyor olabilir.
+                </p>
+                <ul>
+                    <li><strong>Hızlı Çözüm:</strong> Klavyeden <code>Ctrl + Shift + Esc</code> tuşlarına basarak Görev Yöneticisi'ni açın. <em>İşlemler</em> sekmesinde arka planda çalışan "Python" veya "oftek" süreçlerini bulup <strong>"Görevi Sonlandır"</strong> yapın. Ardından <code>baslat.bat</code>'ı tekrar çalıştırın.</li>
+                </ul>
+
+                <h3>Senaryo 4: Telefondan veya Tabletten Sayfa Açılmıyor</h3>
+                <ul>
+                    <li><strong>Wi-Fi Kontrolü:</strong> Cep telefonunuzun mobil veride (4.5G/5G) değil, ana bilgisayarla <strong>birebir aynı Wi-Fi/ofis ağına</strong> bağlı olduğundan emin olun.</li>
+                    <li><strong>Windows Güvenlik Duvarı:</strong> Program ilk açıldığında Windows Güvenlik Duvarı izin penceresi açtıysa, "Özel ağlarda bu uygulamanın iletişimine izin ver" kutusunu işaretlediğinizden emin olun.</li>
+                    <li><strong>IP Adresi Kontrolü:</strong> Bilgisayarın siyah konsol ekranında yazan yerel IP adresini (Örn: <code>http://192.168.1.45:8080</code>) telefon tarayıcınızın adres çubuğuna başında <code>http://</code> olacak şekilde tam olarak yazdığınızdan emin olun.</li>
+                </ul>
             </section>
 
         </main>

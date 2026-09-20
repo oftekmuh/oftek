@@ -76,19 +76,22 @@ oftek, mimari olarak tamamen kurum bağımsızdır. **Sistem & Ayarlar** ekranı
 
 ## 🚀 Hızlı Başlangıç
 
-### Seçenek 1: Windows Taşınabilir (Portable - Hiçbir Kurulum Gerekmez)
-1. Proje klasörünü bilgisayarınıza veya USB flash diskinize çıkartın.
+### Seçenek 1: Windows Taşınabilir (Dahili Python 3.11 Dahildir - Sıfır Kurulum)
+Proje içerisinde hazır taşınabilir **`python/`** motoru yer alır (~20 MB). Bilgisayarınıza Python veya harici paketler yüklemenize gerek yoktur.
+1. İndirdiğiniz zip arşivini klasöre çıkartın (Zip içinden doğrudan çalıştırmayınız).
 2. **`baslat.bat`** dosyasına çift tıklayın.
-3. Dahili Python motoru devreye girer, yerel sunucu başlatılır ve tarayıcınız otomatik açılır:  
+3. Dahili Python motoru otomatik devreye girer, yerel sunucu başlatılır ve tarayıcınız otomatik açılır:  
    👉 **[http://localhost:8080](http://localhost:8080)**
 
-### Seçenek 2: Doğrudan Python ile Çalıştırma (Windows / Linux / macOS)
-Sisteminizde Python 3.11 veya üzeri yüklüyse:
+### Seçenek 2: Kendi Bilgisayarınızdaki Python ile Çalıştırma (Windows / Linux / macOS)
+Sisteminizde Python 3.10, 3.11 veya 3.12 yüklüyse:
 ```bash
-# Proje dizinine girin ve başlatın
+# Proje dizinine girin ve başlatın (harici pip paketi gerekmez)
 python app.py
 ```
 Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
+
+> **Python'ı Sıfırdan Kurmak İsterseniz:** [python.org/downloads](https://www.python.org/downloads/) adresinden Python indirin. Kuruluma başlarken alttaki **"Add Python to PATH"** kutusunu mutlaka işaretleyin.
 
 ### 📱 Aynı Ağdaki Diğer Cihazlardan (Telefon / Tablet) Nasıl Girilir?
 1. Programı ana bilgisayarda başlattığınızda açılan siyah konsol ekranında yerel IP adresiniz otomatik listelenir:  
@@ -96,6 +99,17 @@ Tarayıcınızda açın: **[http://localhost:8080](http://localhost:8080)**
 2. Telefonunuzu veya tabletinizi ana bilgisayarla **aynı Wi-Fi veya ofis ağına** bağlayın.
 3. Mobil cihazınızın tarayıcısına (Safari, Chrome vb.) konsolda yazan IP adresini (Örn: `http://192.168.1.45:8080`) yazıp Enter'a basın.
 4. oftek'in dokunmatik ve tam uyumlu mobil arayüzü karşınıza gelecektir; sahada veya dükkanda kasayı telefonunuzdan yönetebilirsiniz.
+
+### 🛠️ Olası Hatalar ve Hızlı Çözümler (Sorun Giderme)
+- **`baslat.bat` açılıp hemen kapanıyor veya "Python bulunamadı" diyor:**
+  - *Sebep:* Dosyaları ZIP arşivinden çıkarmadan doğrudan zip içinde çalıştırmış olabilirsiniz. Windows zip içini geçici bellekte açar ve `python` klasörünü göremez.
+  - *Çözüm:* `.zip` dosyasına sağ tıklayıp **"Tümünü Ayıkla"** deyin ve çıkarttığınız klasördeki `baslat.bat`'ı çalıştırın.
+- **Port 8080 kullanımda hatası:**
+  - *Sebep:* Önceki bir oturum veya başka bir yerel yazılım portu tutuyor olabilir.
+  - *Çözüm:* `Ctrl+Shift+Esc` ile Görev Yöneticisi'ni açıp arka plandaki `python.exe` sürecini sonlandırın veya bilgisayarı yeniden başlatın.
+- **Telefondan bağlanılamıyor:**
+  - *Çözüm:* Telefonun mobil verisini (4.5G) kapatıp bilgisayarla aynı Wi-Fi ağına bağlandığından ve Windows Güvenlik Duvarı'nda "Özel Ağlara İzin Ver" seçildiğinden emin olun.
+- Daha ayrıntılı hata senaryoları için **[`kullanim_kilavuzu.html`](kullanim_kilavuzu.html)** sayfasındaki 13. Bölümü inceleyebilirsiniz.
 
 ---
 
@@ -127,7 +141,8 @@ python -m unittest discover tests
 oftek/
 ├── app.py                      # Ana başlatıcı (sys.path ve otomatik tarayıcı açıcı)
 ├── server.py                   # Yerel HTTP sunucusu ve REST yönlendirici
-├── baslat.bat                  # Taşınabilir akıllı Windows başlatıcı
+├── baslat.bat                  # Taşınabilir akıllı Windows başlatıcı (ayrıntılı teşhis & geri bildirim)
+├── python/                     # Windows için dahili gömülü Python 3.11 motoru (~20 MB)
 ├── db_manager.py               # SQLite bağlantı, şema ve indeks yöneticisi (< 300 satır)
 ├── db_seed.py                  # Standart hesap planı ve tohum veriler (< 300 satır)
 ├── accounting_engine.py        # FIFO ve finansal hesaplama motoru
@@ -135,8 +150,11 @@ oftek/
 ├── api_handlers.py             # REST API modüler yönlendiricisi
 ├── handlers_*.py               # Modüler API servis işleyicileri (ayarlar, cariler, personel vb.)
 ├── web/
-│   └── index.html              # Modern, %100 genişlikte, sıfır dropdown kullanıcı arayüzü
-├── tests/                      # 22/22 Tam kapsamlı otomatik test paketi
+│   ├── index.html              # Modern, %100 genişlikte, sıfır dropdown kullanıcı arayüzü
+│   ├── js/                     # Modüler istemci iş mantıkları (dashboard, debts vb.)
+│   ├── css/                    # Özel stiller
+│   └── img/                    # Kurumsal logo ve ikon varlıkları
+├── tests/                      # 30/30 Tam kapsamlı otomatik test paketi
 ├── .github/workflows/          # GitHub Actions CI/CD otomatik test iş akışı
 ├── CONTRIBUTING.md             # Katkı sağlama ve kodlama standartları rehberi
 ├── SECURITY.md                 # Güvenlik politikası ve yerel veri emniyeti
