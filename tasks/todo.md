@@ -245,4 +245,10 @@
 - [x] Kullanım Kılavuzu: `kullanim_kilavuzu.html` başlığında ve giriş bölümünde logoların şık boyutlandırmayla yerleştirilmesi
 - [x] Test & Doğrulama: 30/30 birim/regresyon testinin yeşil geçmesi ve görsel denetim
 
+## Faz 26: GitHub Public Depo Kurulumu (oftekmuh/oftek) & CI/CD Doğrulaması
+- [x] Gizlilik & Anonimlik Kontrolü: 0 kişisel veri, anonim yazar (`oftek <contact@oftek.org>`) ve `.gitignore` denetimi
+- [x] GitHub Organizasyonu: `oftekmuh` organizasyonu altında `oftek` genel (public) reposunun oluşturulması
+- [x] Kod İtme (Push): Ana dalın (`main`) `https://github.com/oftekmuh/oftek` adresine başarıyla itilmesi
+- [x] CI/CD Doğrulaması: GitHub Actions üzerinde Ubuntu/Windows ve Python 3.11/3.12 matrisinde tüm testlerin eksiksiz yeşil geçmesi
+
 
