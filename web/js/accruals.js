@@ -57,12 +57,33 @@ async function initEmployeeAccrualPage() {
 
     await loadDebtTypes();
     if (typeof loadEmployees === 'function') await loadEmployees();
+    await initEmpAccExpenseAccount();
 
     const tbody = document.getElementById('emp-acc-tbody');
     if (tbody && tbody.children.length === 0) {
         addEmpAccrualRow();
     }
     calculateEmpAccTotals();
+}
+
+// Tahakkuk gider hesabı: son kullanılan > 770.01 > 770 (hesap planında varsa)
+async function initEmpAccExpenseAccount() {
+    const searchInp = document.getElementById('emp-acc-gider-search');
+    const valInp = document.getElementById('emp-acc-gider');
+    if (!searchInp || !valInp) return;
+    if (typeof loadAccounts === 'function') await loadAccounts();
+    const accounts = globalAccountsList || [];
+    let saved = '';
+    try { saved = localStorage.getItem('oftek_emp_acc_gider') || ''; } catch (e) {}
+    const pick = [valInp.value, saved, '770.01', '770'].map(k => accounts.find(a => a.kod === k)).find(Boolean);
+    valInp.value = pick ? pick.kod : '';
+    searchInp.value = pick ? `${pick.kod} - ${pick.ad}` : '';
+    if (!searchInp.dataset.acInit) {
+        searchInp.dataset.acInit = '1';
+        // Elle yazılan metin seçim yapılana kadar eski hesabı geçerli bırakmasın
+        searchInp.addEventListener('input', () => { valInp.value = ''; });
+        attachAccountAutocomplete(searchInp, valInp);
+    }
 }
 
 async function loadDebtTypes() {
@@ -317,6 +338,13 @@ async function submitEmployeeAccrualVoucher() {
         return;
     }
 
+    const gider_hesap = document.getElementById('emp-acc-gider')?.value.trim() || '';
+    if (!gider_hesap) {
+        showToast('Tahakkuk için gider hesabını seçiniz (Örn: 770 veya 630.01).', 'error');
+        return;
+    }
+    try { localStorage.setItem('oftek_emp_acc_gider', gider_hesap); } catch (e) {}
+
     try {
         const res = await fetch('/api/employees/accrual-voucher', {
             method: 'POST',
@@ -326,6 +354,7 @@ async function submitEmployeeAccrualVoucher() {
                 donem_yil: parseInt(currentEmpAccYear),
                 donem_ay: parseInt(currentEmpAccMonth),
                 aciklama,
+                gider_hesap,
                 satirlar
             })
         });

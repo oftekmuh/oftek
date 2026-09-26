@@ -51,10 +51,14 @@ DEFAULT_EMP_TYPES = [
 
 def seed_defaults(cursor):
     """Standart hesap planı, borç çeşitleri ve personel türlerini yükler."""
-    cursor.executemany("""
-        INSERT OR IGNORE INTO hesap_plani (kod, ad, karakter, seviye)
-        VALUES (?, ?, ?, ?)
-    """, DEFAULT_ACCOUNTS)
+    # Hesap planı yalnızca boşken tohumlanır; kullanıcının Excel'den yüklediği
+    # (standart hesapları temizlenmiş) plan her açılışta bozulmasın.
+    cursor.execute("SELECT COUNT(*) FROM hesap_plani")
+    if cursor.fetchone()[0] == 0:
+        cursor.executemany("""
+            INSERT OR IGNORE INTO hesap_plani (kod, ad, karakter, seviye)
+            VALUES (?, ?, ?, ?)
+        """, DEFAULT_ACCOUNTS)
 
     cursor.executemany("""
         INSERT OR IGNORE INTO personel_borc_turleri (kod, ad, yon, varsayilan_tutar)

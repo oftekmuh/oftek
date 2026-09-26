@@ -15,6 +15,7 @@ from handlers_vouchers import handle_voucher_routes
 from handlers_accruals import handle_accrual_routes
 from handlers_settings import handle_settings_routes
 from handlers_reports import handle_report_routes
+from handlers_imports import handle_import_routes
 
 
 def handle_api_request(handler, method, path, query, body):
@@ -67,6 +68,11 @@ def handle_api_request(handler, method, path, query, body):
             "setup_required": False,
             "authenticated": False
         }, 401
+
+    # 0.5 Excel Toplu Aktarım Rotaları (personel, fiş, alacak/borç faturaları)
+    res, status = handle_import_routes(method, path, query, body)
+    if status is not None:
+        return res, status
 
     # 1. Gün Oturumu ve Günlük Hareket Rotaları
     res, status = handle_session_routes(method, path, query, body)

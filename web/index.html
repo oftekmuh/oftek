@@ -332,6 +332,9 @@
                         <button onclick="showAddCompanyModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
                             <i class="fa-solid fa-plus mr-1"></i>Yeni Firma Tanımla
                         </button>
+                        <button onclick="openExcelImport('borc')" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold border border-emerald-200">
+                            <i class="fa-solid fa-file-excel mr-1"></i>Excel'den Borç Faturası
+                        </button>
                         <button onclick="showAddDebtModal()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm">
                             <i class="fa-solid fa-file-invoice mr-1"></i>Borç/Fatura Girişi
                         </button>
@@ -370,6 +373,9 @@
                     <div class="flex flex-wrap items-center gap-2">
                         <button onclick="showAddEmployeeModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
                             <i class="fa-solid fa-user-plus mr-1"></i>Yeni Personel Ekle
+                        </button>
+                        <button onclick="openExcelImport('personel')" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold border border-emerald-200">
+                            <i class="fa-solid fa-file-excel mr-1"></i>Excel'den Personel Aktar
                         </button>
                         <button onclick="showEmployeeTypesModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
                             <i class="fa-solid fa-id-badge mr-1"></i>Personel Türleri
@@ -482,6 +488,9 @@
                         <button type="button" onclick="showDebtTypesModal()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5">
                             <i class="fa-solid fa-gear text-slate-500"></i><span>Borç Çeşitlerini Yönet</span>
                         </button>
+                        <button type="button" onclick="openExcelImport('personel_tahakkuk')" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold flex items-center gap-1.5 border border-emerald-200">
+                            <i class="fa-solid fa-file-excel"></i><span>Excel'den Doldur</span>
+                        </button>
                         <button type="button" onclick="populateAllEmployeesAccrual()" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold flex items-center gap-1.5">
                             <i class="fa-solid fa-users-viewfinder"></i><span>Tüm Aktif Personelleri Doldur</span>
                         </button>
@@ -489,7 +498,7 @@
                 </div>
 
                 <!-- Fiş Üst Bilgileri -->
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs grid grid-cols-1 sm:grid-cols-5 gap-4 text-xs">
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Fiş Tarihi</label>
                         <input type="date" id="emp-acc-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
@@ -518,6 +527,13 @@
                         <label class="block font-semibold text-slate-700 mb-1">Genel Fiş Açıklaması</label>
                         <div class="relative">
                             <input type="text" id="emp-acc-desc" placeholder="Örn: Aylık Maaş ve Mesai Tahakkuku" class="autocomplete-desc w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Gider Hesabı (Borç)</label>
+                        <div class="relative">
+                            <input type="text" id="emp-acc-gider-search" placeholder="Örn: 770 veya 630.01" autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-indigo-500">
+                            <input type="hidden" id="emp-acc-gider">
                         </div>
                     </div>
                 </div>
@@ -573,6 +589,9 @@
                         <p class="text-xs text-slate-500">Kategori bazlı satış/hakediş faturaları ve tahsilatların açık alacaklara dağıtımı.</p>
                     </div>
                     <div class="flex items-center gap-2">
+                        <button onclick="openExcelImport('alacak')" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold border border-emerald-200">
+                            <i class="fa-solid fa-file-excel mr-1"></i>Excel'den Alacak Faturası
+                        </button>
                         <button onclick="showAddReceivableModal()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
                             <i class="fa-solid fa-file-circle-plus mr-1"></i>Yeni Alacak Kaydı
                         </button>
@@ -652,6 +671,9 @@
                         <div class="relative flex-1">
                             <input type="text" id="v-page-desc" placeholder="Genel fiş açıklaması (Geçmişten otomatik tamamlama)..." class="v-autocomplete-desc w-full bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 text-xs text-slate-800 outline-none focus:ring-1 focus:ring-amber-500">
                         </div>
+                        <button type="button" onclick="openExcelImport('fis')" title="Excel'den Toplu Fiş Aktar" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-1 transition-colors shrink-0">
+                            <i class="fa-solid fa-file-excel text-[11px]"></i><span>Excel</span>
+                        </button>
                         <button type="button" onclick="clearVoucherEntryPage()" title="Formu Temizle / Yeni Fiş" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1 transition-colors shrink-0">
                             <i class="fa-solid fa-rotate-left text-slate-500 text-[11px]"></i><span>Temizle</span>
                         </button>
@@ -750,9 +772,14 @@
                         <h2 class="text-base font-bold text-slate-900">Yevmiye Defteri (Fiş Kayıtları)</h2>
                         <p class="text-xs text-slate-500">Gün sonu kapanışlarından ve manuel girilen çift taraflı yevmiye fişleri.</p>
                     </div>
-                    <button onclick="openVoucherEntryPage()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5">
-                        <i class="fa-solid fa-plus"></i><span>Yeni Yevmiye Fişi Girişi</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="openExcelImport('fis')" class="px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold border border-emerald-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-excel"></i><span>Excel'den Fiş Aktar</span>
+                        </button>
+                        <button onclick="openVoucherEntryPage()" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i><span>Yeni Yevmiye Fişi Girişi</span>
+                        </button>
+                    </div>
                 </div>
                 <div id="vouchers-container" class="space-y-4"></div>
             </section>
@@ -2009,6 +2036,49 @@
         </div>
     </div>
 
+    <!-- ORTAK EXCEL TOPLU AKTARIM MODALI -->
+    <div id="modal-excel-import" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between mb-2 shrink-0">
+                <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-file-excel text-emerald-600"></i><span id="excel-imp-title">Excel ile Aktar</span>
+                </h3>
+                <button onclick="hideModal('modal-excel-import')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="excel-imp-desc" class="text-xs text-slate-500 mb-2 shrink-0"></p>
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200 rounded-xl p-2 mb-3 shrink-0">
+                <div class="text-[11px] text-slate-600 flex flex-wrap items-center gap-1"><span class="font-semibold">Sütunlar:</span> <span id="excel-imp-columns" class="flex flex-wrap gap-1"></span></div>
+                <button type="button" onclick="downloadExcelImportTemplate()" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-[11px] font-semibold flex items-center gap-1 shrink-0">
+                    <i class="fa-solid fa-download text-emerald-600"></i><span>Örnek Şablon</span>
+                </button>
+            </div>
+
+            <div class="space-y-3 shrink-0">
+                <div class="border-2 border-dashed border-slate-200 hover:border-emerald-500 rounded-2xl p-3 text-center cursor-pointer transition-colors bg-slate-50" onclick="document.getElementById('excel-imp-file').click()">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-emerald-600 mb-1"></i>
+                    <p class="text-xs font-semibold text-slate-700">Excel Dosyası Seçmek İçin Tıklayın</p>
+                    <p class="text-[11px] text-slate-400 mt-0.5">.xlsx, .xls veya .csv · İlk satır başlık olmalıdır (sütun sırası serbest)</p>
+                    <input type="file" id="excel-imp-file" accept=".xlsx, .xls, .csv" class="hidden" onchange="onExcelImportFileSelected(event)">
+                </div>
+                <div id="excel-imp-options"></div>
+            </div>
+
+            <div id="excel-imp-preview" class="hidden flex-1 overflow-auto mt-3 border border-slate-100 rounded-xl p-2 bg-slate-50 text-xs">
+                <div id="excel-imp-info" class="font-semibold text-slate-700 mb-2 px-1"></div>
+                <div id="excel-imp-errors" class="text-[11px]"></div>
+                <table id="excel-imp-table" class="w-full font-mono text-[11px]"></table>
+                <div id="excel-imp-more" class="text-center text-slate-400 pt-1 italic"></div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex justify-end gap-2 shrink-0 mt-3">
+                <button type="button" onclick="hideModal('modal-excel-import')" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-700 text-xs font-medium">İptal</button>
+                <button type="button" id="excel-imp-submit" disabled onclick="submitExcelImport()" class="px-5 py-2 rounded-xl bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-cloud-arrow-up"></i><span id="excel-imp-submit-label">Aktar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- HIZLI GİDER GİRİŞ MODALI -->
     <div id="modal-quick-expense" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
@@ -2351,6 +2421,7 @@
     <script src="js/accounts.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/reports.js"></script>
+    <script src="js/imports.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

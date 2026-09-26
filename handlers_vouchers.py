@@ -4,6 +4,68 @@ Yevmiye Fişi Yönetimi ve Borç/Alacak Satır Girişi API'leri (handlers_vouche
 
 from db_manager import get_db_connection
 
+VOUCHER_TYPE_MAP = {
+    "MAHSUP": "MAHSUP",
+    "DÜZELTME": "DUZELTME",
+    "DUZELTME": "DUZELTME",
+    "TAHAKKUK": "TAHAKKUK",
+    "AÇILIŞ": "ACILIS",
+    "ACILIS": "ACILIS",
+    "KAPANIŞ": "KAPANIS",
+    "KAPANIS": "KAPANIS"
+}
+
+
+def validate_voucher_rows(cur, rows, aciklama):
+    """
+    Fiş satırlarını doğrular (hesap varlığı, tek yönlü tutar, denklik).
+    (validated_rows, toplam_borc, hata_mesaji) döndürür; hata yoksa hata_mesaji None'dır.
+    """
+    tot_borc = 0.0
+    tot_alacak = 0.0
+    validated_rows = []
+
+    for idx, r in enumerate(rows, start=1):
+        hkod = str(r.get("hesap_kod", "")).strip()
+        if not hkod:
+            return None, 0, f"{idx}. satırda hesap kodu boş bırakılamaz."
+
+        # Hesap planında var mı kontrol et
+        cur.execute("SELECT kod, ad FROM hesap_plani WHERE kod = ?", (hkod,))
+        if not cur.fetchone():
+            return None, 0, f"{idx}. satırdaki '{hkod}' hesap planında bulunamadı."
+
+        try:
+            b_val = round(float(r.get("borc", 0) or 0), 2)
+            a_val = round(float(r.get("alacak", 0) or 0), 2)
+        except (ValueError, TypeError):
+            return None, 0, f"{idx}. satırda geçersiz tutar formatı."
+
+        if b_val < 0 or a_val < 0:
+            return None, 0, f"{idx}. satırda borç veya alacak tutarı negatif olamaz."
+
+        if b_val == 0 and a_val == 0:
+            return None, 0, f"{idx}. satırda hem borç hem alacak 0 olamaz."
+
+        if b_val > 0 and a_val > 0:
+            return None, 0, f"{idx}. satırda hem borç hem alacak aynı anda girilemez (Tek yönlü olmalı)."
+
+        tot_borc += b_val
+        tot_alacak += a_val
+        satir_desc = str(r.get("aciklama", "") or "").strip() or aciklama
+        validated_rows.append((idx, hkod, satir_desc, b_val, a_val))
+
+    tot_borc = round(tot_borc, 2)
+    tot_alacak = round(tot_alacak, 2)
+
+    if tot_borc <= 0:
+        return None, 0, "Fiş toplamı 0'dan büyük olmalıdır."
+
+    if abs(tot_borc - tot_alacak) >= 0.01:
+        return None, 0, f"Fiş dengesiz! Toplam Borç ({tot_borc:.2f} TL) ile Toplam Alacak ({tot_alacak:.2f} TL) eşit olmalıdır."
+
+    return validated_rows, tot_borc, None
+
 
 def handle_voucher_routes(method, path, query, body):
     """Yevmiye fişleri ile ilgili REST API rotalarını işler."""
@@ -96,17 +158,7 @@ def handle_voucher_routes(method, path, query, body):
         no = body.get("no")
         tarih = body.get("tarih")
         raw_tip = str(body.get("tip", "MAHSUP")).upper().strip()
-        tip_map = {
-            "MAHSUP": "MAHSUP",
-            "DÜZELTME": "DUZELTME",
-            "DUZELTME": "DUZELTME",
-            "TAHAKKUK": "TAHAKKUK",
-            "AÇILIŞ": "ACILIS",
-            "ACILIS": "ACILIS",
-            "KAPANIŞ": "KAPANIS",
-            "KAPANIS": "KAPANIS"
-        }
-        tip = tip_map.get(raw_tip, "MAHSUP")
+        tip = VOUCHER_TYPE_MAP.get(raw_tip, "MAHSUP")
         aciklama = body.get("aciklama", "").strip()
         rows = body.get("rows", [])
 
@@ -136,58 +188,10 @@ def handle_voucher_routes(method, path, query, body):
                 conn.close()
                 return {"error": f"#{no} numaralı yevmiye fişi zaten mevcut! Başka bir numara seçiniz."}, 400
 
-        # Satır doğrulama & Borç / Alacak toplamı
-        tot_borc = 0.0
-        tot_alacak = 0.0
-        validated_rows = []
-
-        for idx, r in enumerate(rows, start=1):
-            hkod = str(r.get("hesap_kod", "")).strip()
-            if not hkod:
-                conn.close()
-                return {"error": f"{idx}. satırda hesap kodu boş bırakılamaz."}, 400
-
-            # Hesap planında var mı kontrol et
-            cur.execute("SELECT kod, ad FROM hesap_plani WHERE kod = ?", (hkod,))
-            acc = cur.fetchone()
-            if not acc:
-                conn.close()
-                return {"error": f"{idx}. satırdaki '{hkod}' hesap planında bulunamadı."}, 400
-
-            try:
-                b_val = round(float(r.get("borc", 0) or 0), 2)
-                a_val = round(float(r.get("alacak", 0) or 0), 2)
-            except (ValueError, TypeError):
-                conn.close()
-                return {"error": f"{idx}. satırda geçersiz tutar formatı."}, 400
-
-            if b_val < 0 or a_val < 0:
-                conn.close()
-                return {"error": f"{idx}. satırda borç veya alacak tutarı negatif olamaz."}, 400
-
-            if b_val == 0 and a_val == 0:
-                conn.close()
-                return {"error": f"{idx}. satırda hem borç hem alacak 0 olamaz."}, 400
-
-            if b_val > 0 and a_val > 0:
-                conn.close()
-                return {"error": f"{idx}. satırda hem borç hem alacak aynı anda girilemez (Tek yönlü olmalı)."}, 400
-
-            tot_borc += b_val
-            tot_alacak += a_val
-            satir_desc = r.get("aciklama", "").strip() or aciklama
-            validated_rows.append((idx, hkod, satir_desc, b_val, a_val))
-
-        tot_borc = round(tot_borc, 2)
-        tot_alacak = round(tot_alacak, 2)
-
-        if tot_borc <= 0:
+        validated_rows, tot_borc, err = validate_voucher_rows(cur, rows, aciklama)
+        if err:
             conn.close()
-            return {"error": "Fiş toplamı 0'dan büyük olmalıdır."}, 400
-
-        if abs(tot_borc - tot_alacak) >= 0.01:
-            conn.close()
-            return {"error": f"Fiş dengesiz! Toplam Borç ({tot_borc:.2f} TL) ile Toplam Alacak ({tot_alacak:.2f} TL) eşit olmalıdır."}, 400
+            return {"error": err}, 400
 
         try:
             cur.execute("""

@@ -101,6 +101,7 @@ class TestAccountingEngine(unittest.TestCase):
                 tarih TEXT NOT NULL,
                 tutar REAL NOT NULL,
                 aciklama TEXT,
+                fis_id INTEGER,
                 FOREIGN KEY(personel_id) REFERENCES personeller(id),
                 FOREIGN KEY(gun_id) REFERENCES gun_oturumlar(id),
                 UNIQUE(personel_id, donem_yil, donem_ay, tur)
@@ -120,6 +121,7 @@ class TestAccountingEngine(unittest.TestCase):
                 kalan_tutar REAL NOT NULL,
                 durum TEXT DEFAULT 'ACIK',
                 aciklama TEXT,
+                fis_id INTEGER,
                 FOREIGN KEY(cari_id) REFERENCES cariler(id),
                 FOREIGN KEY(gun_id) REFERENCES gun_oturumlar(id)
             );
@@ -137,6 +139,7 @@ class TestAccountingEngine(unittest.TestCase):
                 kalan_tutar REAL NOT NULL,
                 durum TEXT DEFAULT 'ACIK',
                 aciklama TEXT,
+                fis_id INTEGER,
                 FOREIGN KEY(cari_id) REFERENCES cariler(id),
                 FOREIGN KEY(gun_id) REFERENCES gun_oturumlar(id)
             );

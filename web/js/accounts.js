@@ -2,10 +2,15 @@
  * oftek - Hesap Planı, Mizan ve Excel İçe Aktarımı
  */
 
+let globalAccountsList = [];
+
 async function loadAccounts() {
     try {
         const res = await fetch('/api/accounts');
         const rows = await res.json();
+        if (!res.ok || !Array.isArray(rows)) {
+            throw new Error((rows && rows.error) || `Sunucu yanıtı: ${res.status}`);
+        }
         globalAccountsList = rows;
         const tbody = document.getElementById('accounts-table-body');
         if (!tbody) return;
@@ -92,7 +97,7 @@ function onAccountExcelFileSelected(evt) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-            const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+            const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, raw: false, defval: '' });
 
             parsedImportAccounts = [];
             const startIndex = (rows[0] && isNaN(String(rows[0][0]).charAt(0))) ? 1 : 0;
@@ -153,7 +158,6 @@ async function submitAccountImport() {
         if (res.ok) {
             showToast(data.message || 'Hesaplar başarıyla aktarıldı.', 'success');
             hideModal('modal-import-accounts');
-            loadAccounts();
             switchTab('hesap_plani');
         } else {
             showToast(data.error || 'Aktarım sırasında hata oluştu.', 'error');

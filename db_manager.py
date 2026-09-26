@@ -154,6 +154,7 @@ def init_database():
             kalan_tutar REAL NOT NULL,
             durum TEXT DEFAULT 'ACIK',
             aciklama TEXT,
+            fis_id INTEGER,
             FOREIGN KEY(cari_id) REFERENCES cariler(id),
             FOREIGN KEY(gun_id) REFERENCES gun_oturumlar(id)
         );
@@ -172,6 +173,7 @@ def init_database():
             kalan_tutar REAL NOT NULL,
             durum TEXT DEFAULT 'ACIK',
             aciklama TEXT,
+            fis_id INTEGER,
             FOREIGN KEY(cari_id) REFERENCES cariler(id),
             FOREIGN KEY(gun_id) REFERENCES gun_oturumlar(id)
         );
@@ -267,7 +269,9 @@ def init_database():
         "ALTER TABLE personel_tahakkuklari ADD COLUMN fis_id INTEGER",
         "ALTER TABLE personeller ADD COLUMN personel_turu_kod TEXT DEFAULT 'GENEL'",
         "ALTER TABLE cariler ADD COLUMN yetkili TEXT",
-        "ALTER TABLE cariler ADD COLUMN hesap_kodu TEXT"
+        "ALTER TABLE cariler ADD COLUMN hesap_kodu TEXT",
+        "ALTER TABLE alacaklar ADD COLUMN fis_id INTEGER",
+        "ALTER TABLE borclar ADD COLUMN fis_id INTEGER"
     ]:
         try:
             cursor.execute(sql)

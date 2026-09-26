@@ -34,6 +34,31 @@ def _resolve_account(cursor, candidates):
     return candidates[-1] if candidates else "100"
 
 
+def get_or_create_gun_id(cursor, tarih, donem_yil, donem_ay):
+    """
+    Doğrudan fiş kesen işlemler (tahakkuk, Excel aktarımı) için bağlanacak gün oturumunu bulur.
+    Açık oturum yoksa son oturumu, hiç oturum yoksa otomatik bir oturum kullanır.
+    """
+    cursor.execute("SELECT id FROM gun_oturumlar WHERE durum = 'ACIK' ORDER BY id DESC LIMIT 1")
+    row = cursor.fetchone()
+    if row:
+        return row[0]
+    cursor.execute("SELECT id FROM gun_oturumlar ORDER BY id DESC LIMIT 1")
+    row = cursor.fetchone()
+    if row:
+        return row[0]
+    cursor.execute("""
+        INSERT INTO gun_oturumlar (tarih, donem_yil, donem_ay, durum, notlar)
+        VALUES (?, ?, ?, 'ACIK', 'Otomatik Gün Oturumu')
+    """, (tarih, donem_yil, donem_ay))
+    return cursor.lastrowid
+
+
+def next_voucher_no(cursor):
+    cursor.execute("SELECT COALESCE(MAX(no), 0) + 1 FROM fisler")
+    return cursor.fetchone()[0]
+
+
 def close_day_and_generate_voucher(conn, gun_id):
     """
     Günü kapatır, o güne ait tüm operasyonları tek ve dengeli bir yevmiye fişine dönüştürür.
@@ -99,7 +124,7 @@ def close_day_and_generate_voucher(conn, gun_id):
         SELECT t.tutar, t.tur, t.aciklama, p.ad_soyad, p.hesap_kodu
         FROM personel_tahakkuklari t
         JOIN personeller p ON p.id = t.personel_id
-        WHERE t.gun_id = ?
+        WHERE t.gun_id = ? AND t.fis_id IS NULL
     """, (gun_id,))
     for r in cursor.fetchall():
         hesap = _resolve_account(cursor, [r["hesap_kodu"], "335.01", "335"])
@@ -113,7 +138,7 @@ def close_day_and_generate_voucher(conn, gun_id):
         SELECT a.toplam_tutar, a.kategori, a.belge_no, a.aciklama, c.unvan, c.hesap_kodu
         FROM alacaklar a
         JOIN cariler c ON c.id = a.cari_id
-        WHERE a.gun_id = ?
+        WHERE a.gun_id = ? AND a.fis_id IS NULL
     """, (gun_id,))
     for r in cursor.fetchall():
         hesap = _resolve_account(cursor, [r["hesap_kodu"], "120.01", "120"])
@@ -127,7 +152,7 @@ def close_day_and_generate_voucher(conn, gun_id):
         SELECT b.toplam_tutar, b.belge_no, b.aciklama, c.unvan, c.hesap_kodu
         FROM borclar b
         JOIN cariler c ON c.id = b.cari_id
-        WHERE b.gun_id = ?
+        WHERE b.gun_id = ? AND b.fis_id IS NULL
     """, (gun_id,))
     for r in cursor.fetchall():
         hesap = _resolve_account(cursor, [r["hesap_kodu"], "320.01", "320"])

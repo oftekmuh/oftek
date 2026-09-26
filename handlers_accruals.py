@@ -3,7 +3,7 @@ Personel Tahakkuk Fişi, Borç Çeşitleri ve Raporlama API Modülü (handlers_a
 """
 
 from db_manager import get_db_connection
-from accounting_voucher import _resolve_account
+from accounting_voucher import _resolve_account, get_or_create_gun_id
 
 
 def handle_accrual_routes(method, path, query, body):
@@ -104,6 +104,17 @@ def handle_accrual_routes(method, path, query, body):
 
         toplam_tutar = round(toplam_tutar, 2)
 
+        # Borç: seçilen gider hesabı, yoksa 770 Personel Ücret ve Giderleri (varsa 770.01)
+        # Alacak: 335 Personele Borçlar (varsa 335.01)
+        gider_hesap = str(body.get("gider_hesap", "") or "").strip()
+        borc_kod = _resolve_account(cur, [gider_hesap] if gider_hesap else ["770.01", "770"])
+        alacak_kod = _resolve_account(cur, ["335.01", "335"])
+        for kod, rol in ((borc_kod, "Gider"), (alacak_kod, "Personele borçlar")):
+            cur.execute("SELECT 1 FROM hesap_plani WHERE kod = ?", (kod,))
+            if not cur.fetchone():
+                conn.close()
+                return {"error": f"{rol} hesabı '{kod}' hesap planında bulunamadı. Hesap planına ekleyiniz veya farklı bir hesap seçiniz."}, 400
+
         try:
             # Otomatik Genel Muhasebe Fişi (Tip: TAHAKKUK) oluştur
             cur.execute("SELECT COALESCE(MAX(no), 0) + 1 FROM fisler")
@@ -115,36 +126,18 @@ def handle_accrual_routes(method, path, query, body):
             """, (fis_no, tarih, aciklama))
             fis_id = cur.lastrowid
 
-            # Borç: 770 Personel Ücret ve Giderleri (Varsa 770.01)
-            borc_kod = _resolve_account(cur, ["770.01", "770"])
             cur.execute("""
                 INSERT INTO fis_satirlari (fis_id, satir_no, hesap_kod, aciklama, borc, alacak)
                 VALUES (?, 1, ?, ?, ?, 0)
             """, (fis_id, borc_kod, aciklama, toplam_tutar))
 
-            # Alacak: 335 Personele Borçlar (Varsa 335.01)
-            alacak_kod = _resolve_account(cur, ["335.01", "335"])
             cur.execute("""
                 INSERT INTO fis_satirlari (fis_id, satir_no, hesap_kod, aciklama, borc, alacak)
                 VALUES (?, 2, ?, ?, 0, ?)
             """, (fis_id, alacak_kod, aciklama, toplam_tutar))
 
             # Personel Tahakkuk Satırlarını Kaydet
-            cur.execute("SELECT id FROM gun_oturumlar WHERE durum = 'ACIK' ORDER BY id DESC LIMIT 1")
-            act_gun = cur.fetchone()
-            if act_gun:
-                gun_id = act_gun[0]
-            else:
-                cur.execute("SELECT id FROM gun_oturumlar ORDER BY id DESC LIMIT 1")
-                last_gun = cur.fetchone()
-                if last_gun:
-                    gun_id = last_gun[0]
-                else:
-                    cur.execute("""
-                        INSERT INTO gun_oturumlar (tarih, donem_yil, donem_ay, durum, notlar)
-                        VALUES (?, ?, ?, 'ACIK', 'Otomatik Gün Oturumu')
-                    """, (tarih, donem_yil, donem_ay))
-                    gun_id = cur.lastrowid
+            gun_id = get_or_create_gun_id(cur, tarih, donem_yil, donem_ay)
 
             for pid, tur, tutar, s_desc, p_name in valid_rows:
                 cur.execute("""

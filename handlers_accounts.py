@@ -6,6 +6,15 @@ from db_manager import get_db_connection
 
 
 def handle_account_routes(method, path, query, body):
+    # Hesap Planı Listesi
+    if path == "/api/accounts" and method == "GET":
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT kod, ad, karakter, seviye FROM hesap_plani ORDER BY kod ASC")
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return rows, 200
+
     # Toplu Excel/CSV Hesap Aktarımı
     if path == "/api/accounts/bulk" and method == "POST":
         accounts = body.get("accounts", [])
